@@ -1,11 +1,12 @@
+# This script performs the core functionality of extracting PII from string.
+# We preprocess all major types of data forms to string format for PII Detection
 import re
 import logging
-
 from transformers import AutoTokenizer, AutoModelForTokenClassification
 from transformers import pipeline
 
 # Storing the results in a log file when using standalone
-# logging.basicConfig(filename='pii_detection.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+# logging.basicConfig(filename='detect.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Loading the tokenizer and model
 tokenizer = AutoTokenizer.from_pretrained("dslim/bert-base-NER")
@@ -22,7 +23,12 @@ patterns = {
         "PINCODE": r'\b\d{6}\b'
     }
 
-def detect_pii_from_string(input_str):
+"""
+PII are detected from string using 2 ways
+First, we use REGEX to extract PII which always follow a fixed pattern such as email address, IP address, Aadhar Number, etc.
+Next, we use NER to extract PII such as Person name, Location, and Organization
+"""
+def detect_pii_from_string(input_str: str):
     pii = []
 
     # Step 1: Tokenizing the input text on space
@@ -37,7 +43,7 @@ def detect_pii_from_string(input_str):
             pii.append([match, key])
 
     # Step 3: Performing NER and processing the result
-    # This step handles PER, ORG, LOC and MISC
+    # This step handles PER, ORG, LOC
     ner_results = ner(input_str)
     for instance in ner_results:
         word = instance["word"]
@@ -47,9 +53,12 @@ def detect_pii_from_string(input_str):
         if (word[0] == "#"):
             pii[-1][0] += word[2:]
         # This allows us to handle words like Vice City
-        elif (entity[0] == "I" and pii[-1][1] == entity[2:]):
+        elif (entity[0] == "I" and len(pii) > 0 and pii[-1][1] == entity[2:]):
             word = " " + word
             pii[-1][0] += word
+        # # We skip all MISC since they are not usually PII
+        # elif (entity[2:] == "MISC"):
+        #     continue
         # Appending new NERs
         else:
             pii.append([word, entity[2:]])
@@ -60,3 +69,9 @@ def detect_pii_from_string(input_str):
     return pii
 
 # detect_pii_from_string("I live in Jelum Towers, Vice City, 400809, and I go by Sonny. I had an amazing drive through Vice City's neon-lit streets before heading to the storied Malibu Club for an exciting night of music that will never be forgotten. I'm constantly in awe of the city's breathtaking skyline and lively nightlife. Lance Vance, a buddy of mine, will see me shortly to discuss a mission. He is employed with The Dockyards. Using the IP address 172.182.99.1, he emailed me about the mission using the email address lancevance@gmail.com. A message from +919999999999 reached me as well. It appears to be authentic.")
+
+"""
+TO DO: PII detection from CSV and SQL dumps
+       Binning of PII in categories like Biological, Financial, and Personal
+       Better PII detection
+"""
