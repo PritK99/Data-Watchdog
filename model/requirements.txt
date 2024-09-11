@@ -1,5 +1,9 @@
-transformers
-torch
-pypdf2
-python-docx 
+opencv-python
+pandas
+pdf2image
 pypandoc
+pypdf2
+python-docx
+pytesseract
+torch
+transformers

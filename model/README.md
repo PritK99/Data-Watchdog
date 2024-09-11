@@ -2,18 +2,46 @@
 
 ## Methodology
 
-PII are detected from string using 2 ways
-1) We use REGEX to extract PII which always follow a fixed pattern such as email address, IP address, Aadhar Number, etc.
-2) We use NER to extract PII such as Person name, Location, and Organization
+1) **PII Detection from Strings**
 
-## Sample Input & Output
+    I) Regular Expressions (REGEX):
+Used to detect PII with fixed patterns, such as email addresses, IP addresses, Aadhar numbers, and credit card numbers.
 
-Input: `I live in Jelum Towers, Vice City, 400809, and I go by Sonny. I had an amazing drive through Vice City's neon-lit streets before heading to the storied Malibu Club for an exciting night of music that will never be forgotten. I'm constantly in awe of the city's breathtaking skyline and lively nightlife. Lance Vance, a buddy of mine, will see me shortly to discuss a mission. He is employed with The Dockyards. Using the IP address 172.182.99.1, he emailed me about the mission using the email address lancevance@gmail.com. A message from +919999999999 reached me as well. It appears to be authentic.`
+    II) Named Entity Recognition (NER):
+Utilizes pre-trained models to identify PII such as personal names, locations, and organizations.
 
-Output: `2024-09-08 18:13:21,771 - INFO - Detected PII: [['lancevance@gmail.com', 'EMAIL'], ['172.182.99.1', 'IP'], ['919999999999', 'PHONE'], ['400809', 'PINCODE'], ['Jelum Towers', 'LOC'], ['Vice City', 'LOC'], ['Sonny', 'PER'], ['Vice City', 'LOC'], ['Malibu', 'ORG'], ['Club', 'LOC'], ['Lance Vance', 'PER'], ['The Dockyards', 'ORG']]`
+2) **PII Detection from CSV Files**
 
-## To Do
+    I) Column Name Matching: Checks if any column names in the CSV match known PII-related terms. All fields in detected columns are flagged as PII.
 
-* PII detection from CSV and SQL dumps
-* Binning of PII in categories like Biological, Financial, and Personal
-* Better PII detection
+    II) Cell Pattern Matching: Scans through all cells in the CSV and applies REGEX patterns to identify potential PII.
+
+## Steps to create virtual environment on windows
+
+Create a virtual environment
+
+`python -m venv data-watchdog`
+
+Activate the virtual environment
+
+`.\data-watchdog\Scripts\activate`
+
+Navigate to the model folder
+
+`cd model`
+
+Install all the required libraries
+
+`pip install -r .\requirements.txt`
+
+*Note*: Path to `poppler` and `pytesseract` are required in `utils.py` to perform pdf to image conversion and OCR respectively.
+
+## Usage
+
+Create a directory named `assets/temp/` in the home directory. This folder will act as a staging area for files to be processed. The supported file formats are: `.txt`, `.log`, `.pdf`, `.docx`, `.jpg`, `.png`, `.jpeg`, and `.csv`.
+
+To run the standalone model
+
+`python main.py`
+
+All the results will be logged into `results.log`

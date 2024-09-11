@@ -1,48 +1,63 @@
 import os
 import logging
-from detect import detect_pii_from_string
+from detect import detect_pii_from_string, detect_pii_from_csv
 from utils import process_txt_or_log, process_pdf, process_docx, process_image
 
-# Storing the results in a log file
-logging.basicConfig(filename='pii_detection.log', level=logging.INFO,
+# Configure logging to store results in a log file
+logging.basicConfig(filename='results.log', level=logging.INFO,
                     format='%(message)s')
 
-# We treat temp folder as staging area
+# Define the path to the temporary folder where files are stored
 temp_folder = '../assets/temp'
 
-# This function returns list of all files available in temp folder
 def list_files_recursive(folder_path):
+    """
+    Lists all files in a folder and its subfolders.
+
+    input: folder path
+    output: list of file paths
+    """
     file_list = []
     for root, dirs, files in os.walk(folder_path):
         for file in files:
             file_path = os.path.join(root, file)
-            # Normalizing for correct slashes
+            # Normalize the path to ensure correct slashes
             normalized_path = os.path.normpath(file_path)
             file_list.append(normalized_path)
     return file_list
 
+# Get a list of all files in the temporary folder
 files = list_files_recursive(temp_folder)
 
 for file in files:
-
-    if (file.endswith(".txt") or file.endswith(".log")):
+    # Process text and log files
+    if file.endswith(".txt") or file.endswith(".log"):
         content = process_txt_or_log(file)
         pii_result = detect_pii_from_string(content)
 
-    elif (file.endswith(".pdf")):
+    # Process PDF files
+    elif file.endswith(".pdf"):
         content = process_pdf(file)
         pii_result = detect_pii_from_string(content)
 
-    elif (file.endswith(".docx")):
+    # Process DOCX files
+    elif file.endswith(".docx"):
         content = process_docx(file)
         pii_result = detect_pii_from_string(content)
 
-    elif (file.endswith(".jpg") or file.endswith(".png") or file.endswith(".jpeg")):
+    # Process image files (JPG, PNG, JPEG)
+    elif file.endswith(".jpg") or file.endswith(".png") or file.endswith(".jpeg"):
         content = process_image(file)
         pii_result = detect_pii_from_string(content)
 
+    # Process CSV files
+    elif file.endswith(".csv"):
+        pii_result = detect_pii_from_csv(file)
+
+    # Handle unknown file types
     else:
         logging.info(f"Unknown file type: {file}")
         continue
 
+    # Log the PII detection result for each file
     logging.info(f"PII detection result for {file}: {pii_result}")

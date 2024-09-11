@@ -1,36 +1,47 @@
-# This script handles all the preprocessing of different types of files
-# Common filetypes include .txt, .log, .pdf, .docx, .jpg, .png, .jpeg, .sql, .csv
+# This script handles the preprocessing of various file types.
+# Supported file types include .txt, .log, .pdf, .docx, .jpg, .png, .jpeg, .csv
+
 import cv2
 import PyPDF2
 import pytesseract  
 import numpy as np
-from PIL import Image
+import pandas as pd
 from pdf2image import convert_from_path     
 from docx import Document
 
-# Path where the tesseract module is installed 
-pytesseract.pytesseract.tesseract_cmd ='C:/Program Files/Tesseract-OCR/tesseract.exe'  
-poppler_path= r"C:\Users\pritp\Downloads\poppler-24.07.0\Library\bin"
+# Path to the Tesseract OCR module
+pytesseract.pytesseract.tesseract_cmd = 'C:/Program Files/Tesseract-OCR/tesseract.exe'
 
-# .txt or .log files
+# Path to the Poppler library for PDF-to-image conversion
+poppler_path = r"C:\Users\pritp\Downloads\poppler-24.07.0\Library\bin"
+
 def process_txt_or_log(file_path):
+    """
+    Processes text and log files.
+
+    input: file path (string)
+    output: content of the file as a string
+    """
     with open(file_path, 'r', encoding='utf-8', errors='ignore') as file:
         content = file.read()
     return content 
 
-# .pdf files
 def process_pdf(file_path):
-    # First extract text from pdf file
-    content = ""
-    with open(file_path, 'rb') as file:
-            reader = PyPDF2.PdfReader(file)
-            text = ''
-            for page_num in range(len(reader.pages)):
-                page = reader.pages[page_num]
-                content += page.extract_text()
+    """
+    Processes PDF files by extracting text from both text and image layers.
 
-    # Converting .pdf to images and extracting text using ocr
-    # converts the image to result and saves it into result variable 
+    input: file path (string)
+    output: extracted text from the PDF as a string
+    """
+    content = ""
+    # Extract text from PDF file
+    with open(file_path, 'rb') as file:
+        reader = PyPDF2.PdfReader(file)
+        for page_num in range(len(reader.pages)):
+            page = reader.pages[page_num]
+            content += page.extract_text() or ""
+    
+    # Convert PDF pages to images and use OCR to extract text
     images = convert_from_path(file_path, poppler_path=poppler_path)
     for image in images:
         image = np.array(image)
@@ -40,18 +51,28 @@ def process_pdf(file_path):
         rescaled_img = cv2.resize(denoised, None, fx=2, fy=2, interpolation=cv2.INTER_LINEAR)
         kernel = np.ones((2, 2), np.uint8)
         dilated = cv2.dilate(rescaled_img, kernel, iterations=1)
-        content += pytesseract.image_to_string(image) 
+        content += pytesseract.image_to_string(dilated) 
 
     return content
 
-# .docx files
 def process_docx(file_path):
+    """
+    Processes DOCX files.
+
+    input: file path (string)
+    output: content of the DOCX file as a string
+    """
     doc = Document(file_path)
     text = '\n'.join([p.text for p in doc.paragraphs])
     return text
 
-# .jpg, .png, .jpeg files
 def process_image(file_path):
+    """
+    Processes image files (JPG, PNG, JPEG) using OCR to extract text.
+
+    input: file path (string)
+    output: extracted text from the image as a string
+    """
     image = cv2.imread(file_path)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     _, thresh = cv2.threshold(gray, 150, 255, cv2.THRESH_BINARY_INV)
@@ -59,9 +80,18 @@ def process_image(file_path):
     rescaled_img = cv2.resize(denoised, None, fx=2, fy=2, interpolation=cv2.INTER_LINEAR)
     kernel = np.ones((2, 2), np.uint8)
     dilated = cv2.dilate(rescaled_img, kernel, iterations=1)
-    content = pytesseract.image_to_string(image) 
+    content = pytesseract.image_to_string(dilated) 
     return content 
 
-"""
-TO DO: Processing for SQL and CSV
-"""
+def process_csv(file_path):
+    """
+    Processes CSV files by concatenating all cell values into a single string.
+
+    input: file path (string)
+    output: concatenated cell values from the CSV as a string
+    """
+    df = pd.read_csv(file_path)
+    cell_values = df.values.flatten().astype(str)
+    cell_values = [str(value) for value in cell_values if value != "nan"]
+    content = ' | '.join(cell_values)
+    return content
