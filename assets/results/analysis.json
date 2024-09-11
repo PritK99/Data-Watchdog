@@ -1,0 +1,41 @@
+{
+    "total_risks": 16397,
+    "mean_risk_score": 8.45,
+    "bucket distribution": {
+        "Financial": 11275,
+        "Personal": 5095,
+        "Miscellaneous": 21,
+        "Unknown": 6
+    },
+    "pii_counts_per_file": {
+        "digital_wallet_transactions.csv": 16322,
+        "Raw_Dataset.csv": 38,
+        "my_personal_diary.docx": 17,
+        "my_personal_diary.txt": 17,
+        "world-mastercard-card_1280x720.jpg": 3
+    },
+    "pii_counts_per_file_type": {
+        "csv": 16360,
+        "docx": 17,
+        "txt": 17,
+        "jpg": 3
+    },
+    "mean_risk_per_file_type": {
+        "csv": 8.45,
+        "docx": 6.47,
+        "jpg": 8.67,
+        "txt": 6.47
+    },
+    "mean_risk_per_file": {
+        "Raw_Dataset.csv": 5.27,
+        "digital_wallet_transactions.csv": 8.46,
+        "my_personal_diary.docx": 6.47,
+        "my_personal_diary.txt": 6.47,
+        "world-mastercard-card_1280x720.jpg": 8.67
+    },
+    "risk_distribution": {
+        "low": 27,
+        "medium": 10061,
+        "high": 6303
+    }
+}
