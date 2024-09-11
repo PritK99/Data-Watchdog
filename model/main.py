@@ -2,6 +2,7 @@ import os
 import logging
 from detect import detect_pii_from_string, detect_pii_from_csv
 from utils import process_txt_or_log, process_pdf, process_docx, process_image
+from postprocess import assign_bucket_and_risk, convert_to_csv
 
 # Configure logging to store results in a log file
 logging.basicConfig(filename='results.log', level=logging.INFO,
@@ -9,6 +10,8 @@ logging.basicConfig(filename='results.log', level=logging.INFO,
 
 # Define the path to the temporary folder where files are stored
 temp_folder = '../assets/temp'
+
+global_pii_results = []
 
 def list_files_recursive(folder_path):
     """
@@ -61,3 +64,9 @@ for file in files:
 
     # Log the PII detection result for each file
     logging.info(f"PII detection result for {file}: {pii_result}")
+    processed_pii_result = assign_bucket_and_risk(pii_result)
+    final_result = [file, processed_pii_result]
+    global_pii_results.append(final_result)
+
+pii_results_df = convert_to_csv(global_pii_results)
+pii_results_df.to_csv("../assets/results/output.csv", index=False)
