@@ -1,0 +1,6 @@
+psycopg2
+openpyxl
+pandas
+boto3
+sqlalchemy
+flask
