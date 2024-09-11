@@ -135,7 +135,7 @@ def detect_using_ner(input_str: str):
         entity = instance["entity"]
 
         # Handle subtokenization from tokenizer
-        if word[0] == "#":
+        if (word[0] == "#" and len(pii) > 0):
             pii[-1][0] += word[2:]
         # Handle multi-word entities
         elif entity[0] == "I" and len(pii) > 0 and pii[-1][1] == entity[2:]:

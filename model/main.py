@@ -3,13 +3,15 @@ import logging
 from detect import detect_pii_from_string, detect_pii_from_csv
 from utils import process_txt_or_log, process_pdf, process_docx, process_image
 from postprocess import assign_bucket_and_risk, convert_to_csv
+from analytics import analyze
 
 # Configure logging to store results in a log file
 logging.basicConfig(filename='results.log', level=logging.INFO,
                     format='%(message)s')
 
 # Define the path to the temporary folder where files are stored
-temp_folder = '../assets/temp'
+# temp_folder = '../assets/temp'
+temp_folder = '../backend/downloads'
 
 global_pii_results = []
 
@@ -69,4 +71,8 @@ for file in files:
     global_pii_results.append(final_result)
 
 pii_results_df = convert_to_csv(global_pii_results)
+analysis_json = analyze(pii_results_df)
+
+# Saving JSON and CSV
+with open('../assets/results/analysis.json', 'w') as f: f.write(analysis_json)
 pii_results_df.to_csv("../assets/results/output.csv", index=False)
