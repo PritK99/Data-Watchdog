@@ -13,7 +13,8 @@ parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
 
 # Importing models
-from model.main import get_pii
+# TO DO
+# from model.main import get_pii
 
 app = Flask(__name__)
 
@@ -26,7 +27,12 @@ if not os.path.exists(download_dir):
 
 @app.route('/')
 def index():
+    return render_template('new.html')
+
+@app.route('/configure')
+def configure():
     return render_template('index.html')
+
 @app.route('/dashboard')
 def dashboard():
     return render_template('dashboard.html')

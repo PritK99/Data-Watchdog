@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Data Watchdog - PII Detection Tool</title>
+    <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:400,600" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='dist/css/style.css') }}">
+    <script src="https://unpkg.com/animejs@3.0.1/lib/anime.min.js"></script>
+    <script src="https://unpkg.com/scrollreveal@4.0.0/dist/scrollreveal.min.js"></script>
+</head>
+<body class="is-boxed has-animations">
+    <div class="body-wrap">
+        <header class="site-header">
+            <div class="container">
+                <div class="site-header-inner">
+                    <div class="brand header-brand">
+                        <h1 class="m-0">
+                            <a href="#">
+                                <!-- Embedded Magnifying Glass SVG Icon -->
+                                <svg class="header-logo-image" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="50" height="50" fill="#0270D7">
+                                    <circle cx="28" cy="28" r="16" stroke="#0270D7" stroke-width="4" fill="transparent"/>
+                                    <line x1="42" y1="42" x2="60" y2="60" stroke="#0270D7" stroke-width="4" stroke-linecap="round"/>
+                                </svg>
+                            </a>
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <section class="hero">
+                <div class="container">
+                    <div class="hero-inner">
+                        <div class="hero-copy">
+                            <h1 class="hero-title mt-0">Data Watchdog - Efficient PII Detection</h1>
+                            <p class="hero-paragraph">Discover and classify Personally Identifiable Information (PII) within diverse data repositories, assess risk levels, and ensure data privacy compliance.</p>
+                            <div class="hero-cta"><a class="button button-primary" href="/configure">Configure Files</a></div>
+                        </div>
+                        <div class="hero-figure anime-element">
+                            <svg class="placeholder" width="528" height="396" viewBox="0 0 528 396">
+                                <rect width="528" height="396" style="fill:transparent;" />
+                            </svg>
+                            <!-- Keep the transition animation -->
+                            <div class="hero-figure-box hero-figure-box-01" data-rotation="45deg"></div>
+                            <div class="hero-figure-box hero-figure-box-02" data-rotation="-45deg"></div>
+                            <div class="hero-figure-box hero-figure-box-03" data-rotation="0deg"></div>
+                            <div class="hero-figure-box hero-figure-box-04" data-rotation="-135deg"></div>
+                            <div class="hero-figure-box hero-figure-box-05"></div>
+                            <div class="hero-figure-box hero-figure-box-06"></div>
+                            <div class="hero-figure-box hero-figure-box-07"></div>
+                            <div class="hero-figure-box hero-figure-box-08" data-rotation="-22deg"></div>
+                            <div class="hero-figure-box hero-figure-box-09" data-rotation="-52deg"></div>
+                            <div class="hero-figure-box hero-figure-box-10" data-rotation="-50deg"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="features section">
+                <div class="container">
+                    <div class="features-inner section-inner has-bottom-divider">
+                        <div class="features-wrap">
+                            <div class="feature text-center is-revealing">
+                                <div class="feature-inner">
+                                    <div class="feature-icon">
+                                        <img src="{{ url_for('static', filename='dist/images/feature-icon-01.svg') }}" alt="Feature 01">
+                                    </div>
+                                    <h4 class="feature-title mt-24">Comprehensive PII Identification</h4>
+                                    <p class="text-sm mb-0">Detect a wide range of PII types, including Aadhaar numbers, PAN numbers, names, emails, Social Security numbers, and more.</p>
+                                </div>
+                            </div>
+                            <div class="feature text-center is-revealing">
+                                <div class="feature-inner">
+                                    <div class="feature-icon">
+                                        <img src="{{ url_for('static', filename='dist/images/feature-icon-02.svg') }}" alt="Feature 02">
+                                    </div>
+                                    <h4 class="feature-title mt-24">Accurate Classification</h4>
+                                    <p class="text-sm mb-0">Classify PII into specific categories such as financial, medical, and personal to assess data sensitivity and regulatory compliance.</p>
+                                </div>
+                            </div>
+                            <div class="feature text-center is-revealing">
+                                <div class="feature-inner">
+                                    <div class="feature-icon">
+                                        <img src="{{ url_for('static', filename='dist/images/feature-icon-03.svg') }}" alt="Feature 03">
+                                    </div>
+                                    <h4 class="feature-title mt-24">Risk Assessment</h4>
+                                    <p class="text-sm mb-0">Evaluate the risk level associated with discovered PII based on sensitivity, data volume, and compliance requirements.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="site-footer">
+            <div class="container">
+                <div class="site-footer-inner">
+                    <div class="brand footer-brand">
+                        <a href="#">
+                            <!-- Embedded Magnifying Glass SVG Icon -->
+                            <svg class="header-logo-image" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="50" height="50" fill="#0270D7">
+                                <circle cx="28" cy="28" r="16" stroke="#0270D7" stroke-width="4" fill="transparent"/>
+                                <line x1="42" y1="42" x2="60" y2="60" stroke="#0270D7" stroke-width="4" stroke-linecap="round"/>
+                            </svg>
+                        </a>
+                    </div>
+                    <ul class="footer-links list-reset">
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">FAQ's</a></li>
+                        <li><a href="#">Support</a></li>
+                    </ul>
+                    <ul class="footer-social-links list-reset">
+                        <li><a href="#"><span class="screen-reader-text">Facebook</span></a></li>
+                        <li><a href="#"><span class="screen-reader-text">Twitter</span></a></li>
+                    </ul>
+                    <div class="footer-copyright">&copy; 2024 Data Watchdog, all rights reserved</div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='dist/js/main.min.js') }}"></script>
+</body>
+</html>

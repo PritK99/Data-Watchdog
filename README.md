@@ -6,6 +6,7 @@
   - [Table of Contents](#table-of-contents)
   - [About The Project](#about-the-project)
   - [Demo](#demo)
+  - [Methodology](#methodology)
   - [Tech Stack](#tech-stack)
   - [File Structure](#file-structure)
   - [Getting started](#getting-started)
@@ -30,6 +31,12 @@ Data Watchdog is a tool built to find and classify Personally Identifiable Infor
 4. Data Visualization: Shows the analytics associated with detect PII.
 
 ## Demo
+
+## Methodology
+
+<img src="assets/img/flowchart.png" alt="flowchart">
+
+We primarily deal with 4 types of files, which are Text Files (`.txt`, `.log`), Image Files (`.png`, `.jpg`, `.jpeg`), PDF Files (`.pdf`) and CSV Files (`.csv`). Details about each PII extraction process can be found <a href="model/README.md">here</a>
 
 ## Tech Stack
 

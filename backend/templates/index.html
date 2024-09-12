@@ -4,46 +4,108 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cloud & PostgreSQL Credentials</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        h2, h3 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: 20px auto;
+        }
+        label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: block;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button {
+            width: 100%;
+            background-color: #3498db;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        h3 {
+            margin-top: 20px;
+            color: #e74c3c;
+        }
+        .container {
+            width: 100%;
+            padding: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h2>Enter AWS Cloud Storage Credentials</h2>
-    <form id="cloud-credentials-form">
-        <label for="access-key">AWS Access Key ID:</label><br>
-        <input type="text" id="access-key" name="access-key" required><br><br>
-        
-        <label for="secret-key">AWS Secret Access Key:</label><br>
-        <input type="password" id="secret-key" name="secret-key" required><br><br>
-        
-        <label for="region">AWS Region:</label><br>
-        <input type="text" id="region" name="region" required><br><br>
-        
-        <button type="submit">Submit AWS Credentials</button>
-    </form>
+    <div class="container">
+        <h2>Enter AWS Cloud Storage Credentials</h2>
+        <form id="cloud-credentials-form">
+            <label for="access-key">AWS Access Key ID:</label>
+            <input type="text" id="access-key" name="access-key" placeholder="Enter your AWS Access Key ID" required>
+            
+            <label for="secret-key">AWS Secret Access Key:</label>
+            <input type="password" id="secret-key" name="secret-key" placeholder="Enter your AWS Secret Access Key" required>
+            
+            <label for="region">AWS Region:</label>
+            <input type="text" id="region" name="region" placeholder="Enter your AWS Region" required>
+            
+            <button type="submit">Submit AWS Credentials</button>
+        </form>
 
-    <h3 id="cloud-message"></h3>
+        <h3 id="cloud-message"></h3>
 
-    <h2>Enter PostgreSQL Database Credentials</h2>
-    <form id="postgres-credentials-form">
-        <label for="db-host">Database Host:</label><br>
-        <input type="text" id="db-host" name="db-host" required><br><br>
-        
-        <label for="db-port">Database Port:</label><br>
-        <input type="text" id="db-port" name="db-port" value="5432" required><br><br>
-        
-        <label for="db-name">Database Name:</label><br>
-        <input type="text" id="db-name" name="db-name" required><br><br>
-        
-        <label for="db-user">Database Username:</label><br>
-        <input type="text" id="db-user" name="db-user" required><br><br>
-        
-        <label for="db-password">Database Password:</label><br>
-        <input type="password" id="db-password" name="db-password" required><br><br>
-        
-        <button type="submit">Submit PostgreSQL Credentials</button>
-    </form>
+        <h2>Enter PostgreSQL Database Credentials</h2>
+        <form id="postgres-credentials-form">
+            <label for="db-host">Database Host:</label>
+            <input type="text" id="db-host" name="db-host" placeholder="Enter your Database Host" required>
+            
+            <label for="db-port">Database Port:</label>
+            <input type="text" id="db-port" name="db-port" value="5432" required>
+            
+            <label for="db-name">Database Name:</label>
+            <input type="text" id="db-name" name="db-name" placeholder="Enter your Database Name" required>
+            
+            <label for="db-user">Database Username:</label>
+            <input type="text" id="db-user" name="db-user" placeholder="Enter your Database Username" required>
+            
+            <label for="db-password">Database Password:</label>
+            <input type="password" id="db-password" name="db-password" placeholder="Enter your Database Password" required>
+            
+            <button type="submit">Submit PostgreSQL Credentials</button>
+        </form>
 
-    <h3 id="postgres-message"></h3>
+        <h3 id="postgres-message"></h3>
+    </div>
 
     <script>
         // AWS Cloud Credentials Form Submission
