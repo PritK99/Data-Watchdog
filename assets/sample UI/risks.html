@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mean Risk Per File and Bucket Distribution</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Mean Risk Per File and Bucket Distribution</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="charts.html">Risk Distribution</a></li>
+                <li><a href="filetypes.html">PII Counts and Risks by File Type</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="chart-container">
+            <h2>Mean Risk Per File</h2>
+            <canvas id="meanRiskPerFileChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <h2>Bucket Distribution</h2>
+            <canvas id="bucketDistributionChart"></canvas>
+        </div>
+    </main>
+    <script>
+        // JSON data
+        const data = {
+            "mean_risk_per_file": {
+                "Raw_Dataset.csv": 5.27,
+                "digital_wallet_transactions.csv": 8.46,
+                "my_personal_diary.docx": 6.47,
+                "my_personal_diary.txt": 6.47,
+                "world-mastercard-card_1280x720.jpg": 8.67
+            },
+            "bucket distribution": {
+                "Financial": 11275,
+                "Personal": 5095,
+                "Miscellaneous": 21,
+                "Unknown": 6
+            }
+        };
+
+        // Mean Risk Per File Bar Chart
+        const ctxMeanRiskPerFile = document.getElementById('meanRiskPerFileChart').getContext('2d');
+        new Chart(ctxMeanRiskPerFile, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(data.mean_risk_per_file),
+                datasets: [{
+                    label: 'Mean Risk Score',
+                    data: Object.values(data.mean_risk_per_file),
+                    backgroundColor: '#4caf50',
+                    borderColor: '#388e3c',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.label + ': ' + tooltipItem.raw;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            font: {
+                                size: 14
+                            }
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: '#eee'
+                        },
+                        ticks: {
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Bucket Distribution Bar Chart
+        const ctxBucketDistribution = document.getElementById('bucketDistributionChart').getContext('2d');
+        new Chart(ctxBucketDistribution, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(data['bucket distribution']),
+                datasets: [{
+                    label: 'Number of Risks',
+                    data: Object.values(data['bucket distribution']),
+                    backgroundColor: '#9c27b0',
+                    borderColor: '#6a1b9a',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.label + ': ' + tooltipItem.raw;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            font: {
+                                size: 14
+                            }
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: '#eee'
+                        },
+                        ticks: {
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
