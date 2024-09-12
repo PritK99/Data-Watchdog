@@ -2,9 +2,17 @@ from flask import Flask, request, jsonify, render_template
 import boto3
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 import os
+import sys
 import pandas as pd
 from sqlalchemy import create_engine, inspect
 from botocore.client import Config
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+sys.path.append(parent_dir)
+
+# Importing models
+from model.main import get_pii
 
 app = Flask(__name__)
 
@@ -105,6 +113,12 @@ def connect_postgres():
 
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
+
+@app.route('/get_analytics', methods=['GET'])
+def get_analytics():
+    # The results are also stored in assets folder
+    analysis_json, pii_results_df = get_pii()
+    return analysis_json
 
 if __name__ == '__main__':
     app.run(debug=True)

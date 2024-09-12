@@ -13,8 +13,6 @@ logging.basicConfig(filename='results.log', level=logging.INFO,
 # temp_folder = '../assets/temp'
 temp_folder = '../backend/downloads'
 
-global_pii_results = []
-
 def list_files_recursive(folder_path):
     """
     Lists all files in a folder and its subfolders.
@@ -31,48 +29,55 @@ def list_files_recursive(folder_path):
             file_list.append(normalized_path)
     return file_list
 
-# Get a list of all files in the temporary folder
-files = list_files_recursive(temp_folder)
+def get_pii():
 
-for file in files:
-    # Process text and log files
-    if file.endswith(".txt") or file.endswith(".log"):
-        content = process_txt_or_log(file)
-        pii_result = detect_pii_from_string(content)
+    # Get a list of all files in the temporary folder
+    files = list_files_recursive(temp_folder)
+    global_pii_results = []
 
-    # Process PDF files
-    elif file.endswith(".pdf"):
-        content = process_pdf(file)
-        pii_result = detect_pii_from_string(content)
+    for file in files:
+        # Process text and log files
+        if file.endswith(".txt") or file.endswith(".log"):
+            content = process_txt_or_log(file)
+            pii_result = detect_pii_from_string(content)
 
-    # Process DOCX files
-    elif file.endswith(".docx"):
-        content = process_docx(file)
-        pii_result = detect_pii_from_string(content)
+        # Process PDF files
+        elif file.endswith(".pdf"):
+            content = process_pdf(file)
+            pii_result = detect_pii_from_string(content)
 
-    # Process image files (JPG, PNG, JPEG)
-    elif file.endswith(".jpg") or file.endswith(".png") or file.endswith(".jpeg"):
-        content = process_image(file)
-        pii_result = detect_pii_from_string(content)
+        # Process DOCX files
+        elif file.endswith(".docx"):
+            content = process_docx(file)
+            pii_result = detect_pii_from_string(content)
 
-    # Process CSV files
-    elif file.endswith(".csv"):
-        pii_result = detect_pii_from_csv(file)
+        # Process image files (JPG, PNG, JPEG)
+        elif file.endswith(".jpg") or file.endswith(".png") or file.endswith(".jpeg"):
+            content = process_image(file)
+            pii_result = detect_pii_from_string(content)
 
-    # Handle unknown file types
-    else:
-        logging.info(f"Unknown file type: {file}")
-        continue
+        # Process CSV files
+        elif file.endswith(".csv"):
+            pii_result = detect_pii_from_csv(file)
 
-    # Log the PII detection result for each file
-    logging.info(f"PII detection result for {file}: {pii_result}")
-    processed_pii_result = assign_bucket_and_risk(pii_result)
-    final_result = [file, processed_pii_result]
-    global_pii_results.append(final_result)
+        # Handle unknown file types
+        else:
+            logging.info(f"Unknown file type: {file}")
+            continue
 
-pii_results_df = convert_to_csv(global_pii_results)
-analysis_json = analyze(pii_results_df)
+        # Log the PII detection result for each file
+        logging.info(f"PII detection result for {file}: {pii_result}")
+        processed_pii_result = assign_bucket_and_risk(pii_result)
+        final_result = [file, processed_pii_result]
+        global_pii_results.append(final_result)
 
-# Saving JSON and CSV
-with open('../assets/results/analysis.json', 'w') as f: f.write(analysis_json)
-pii_results_df.to_csv("../assets/results/output.csv", index=False)
+    pii_results_df = convert_to_csv(global_pii_results)
+    analysis_json = analyze(pii_results_df)
+
+    # Saving JSON and CSV in assets folder
+    with open('../assets/results/analysis.json', 'w') as f: f.write(analysis_json)
+    pii_results_df.to_csv("../assets/results/output.csv", index=False)
+
+    return analysis_json, pii_results_df
+
+analysis_json, pii_results_df = get_pii()
