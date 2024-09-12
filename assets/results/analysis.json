@@ -1,7 +1,7 @@
 {
     "total_risks": 16397,
     "mean_risk_score": 8.45,
-    "bucket distribution": {
+    "bucket_distribution": {
         "Financial": 11275,
         "Personal": 5095,
         "Miscellaneous": 21,

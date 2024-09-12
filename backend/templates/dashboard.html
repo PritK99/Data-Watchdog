@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PII Detection Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            margin-top: 0;
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+        #loadingMessage, #errorMessage {
+            text-align: center;
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+        #errorMessage {
+            color: red;
+        }
+        #errorDetails {
+            margin-top: 10px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            background-color: #f8f8f8;
+            padding: 10px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>PII Detection Dashboard</h1>
+    <div id="loadingMessage">Loading data...</div>
+    <div id="errorMessage" style="display: none;"></div>
+    <div id="errorDetails" style="display: none;"></div>
+    <div class="dashboard" style="display: none;">
+        <div class="card">
+            <h2>Overview</h2>
+            <p>Total Risks: <span id="totalRisks"></span></p>
+            <p>Mean Risk Score: <span id="meanRiskScore"></span></p>
+        </div>
+        <div class="card">
+            <h2>Bucket Distribution</h2>
+            <div class="chart-container">
+                <canvas id="bucketDistributionChart"></canvas>
+            </div>
+        </div>
+        <div class="card">
+            <h2>Risk Distribution</h2>
+            <div class="chart-container">
+                <canvas id="riskDistributionChart"></canvas>
+            </div>
+        </div>
+        <!-- <div class="card"></div>
+            <h2>Mean Risk Per File</h2>
+            <div class="chart-container">
+                <canvas id="meanRiskPerFileChart"></canvas>
+            </div>
+        </div> -->
+        <div class="card">
+            <h2>PII Counts per File Type</h2>
+            <div class="chart-container">
+                <canvas id="piiCountsPerFileTypeChart"></canvas>
+            </div>
+        </div>
+        <div class="card">
+            <h2>Mean Risk per File Type</h2>
+            <div class="chart-container">
+                <canvas id="meanRiskPerFileTypeChart"></canvas>
+            </div>
+        </div>
+        <div class="card">
+            <h2>PII Counts per File</h2>
+            <div class="chart-container">
+                <canvas id="piiCountsPerFileChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_ENDPOINT = '/get_analysis';
+
+        async function fetchData() {
+            try {
+                console.log('Fetching data from:', API_ENDPOINT);
+                const response = await fetch(API_ENDPOINT);
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                console.log('Received data:', data);
+                return data;
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                throw error;
+            }
+        }
+
+        function displayError(message, details = '') {
+            document.getElementById('loadingMessage').style.display = 'none';
+            document.getElementById('errorMessage').textContent = message;
+            document.getElementById('errorMessage').style.display = 'block';
+            if (details) {
+                document.getElementById('errorDetails').textContent = details;
+                document.getElementById('errorDetails').style.display = 'block';
+            }
+        }
+
+        function updateElementText(id, text) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.textContent = text;
+            } else {
+                console.error(`Element with id "${id}" not found`);
+                throw new Error(`Element with id "${id}" not found`);
+            }
+        }
+
+        function updateDashboard(data) {
+            try {
+                console.log('Updating dashboard with data:', data);
+                
+                updateElementText('totalRisks', data.total_risks);
+                updateElementText('meanRiskScore', data.mean_risk_score.toFixed(2));
+
+                createPieChart('bucketDistributionChart', data.bucket_distribution, 'Bucket Distribution');
+                createPieChart('riskDistributionChart', data.risk_distribution, 'Risk Distribution');
+                createPieChart('meanRiskPerFileChart', data.mean_risk_per_file, 'Mean Risk per File');
+                createBarChart('piiCountsPerFileTypeChart', data.pii_counts_per_file_type, 'PII Counts per File Type');
+                createBarChart('meanRiskPerFileTypeChart', data.mean_risk_per_file_type, 'Mean Risk per File Type');
+                createBarChart('piiCountsPerFileChart', data.pii_counts_per_file, 'PII Counts per File');
+
+                document.getElementById('loadingMessage').style.display = 'none';
+                document.querySelector('.dashboard').style.display = 'grid';
+            } catch (error) {
+                console.error('Error updating dashboard:', error);
+                displayError('Error updating dashboard. Please check console for details.', error.toString());
+            }
+        }
+
+        function createPieChart(elementId, data, title) {
+            const canvas = document.getElementById(elementId);
+            if (!canvas) {
+                console.error(`Canvas element with id "${elementId}" not found`);
+                return;
+            }
+            console.log(`Creating pie chart: ${title}`, data);
+            new Chart(canvas.getContext('2d'), {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(data),
+                    datasets: [{
+                        data: Object.values(data),
+                        backgroundColor: [
+                            '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: title
+                        }
+                    }
+                }
+            });
+        }
+
+        function createBarChart(elementId, data, title) {
+            const canvas = document.getElementById(elementId);
+            if (!canvas) {
+                console.error(`Canvas element with id "${elementId}" not found`);
+                return;
+            }
+            console.log(`Creating bar chart: ${title}`, data);
+            new Chart(canvas.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(data),
+                    datasets: [{
+                        data: Object.values(data),
+                        backgroundColor: '#36A2EB'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: title
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Fetch data and update dashboard
+        fetchData()
+            .then(data => {
+                console.log('Successfully fetched data, updating dashboard');
+                updateDashboard(data);
+            })
+            .catch(error => {
+                console.error('Error in main execution:', error);
+                displayError('Failed to load data. Please try again later.', error.toString());
+            });
+    </script>
+</body>
+</html>

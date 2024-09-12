@@ -3,6 +3,7 @@ import boto3
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 import os
 import pandas as pd
+import json
 from sqlalchemy import create_engine, inspect
 from botocore.client import Config
 
@@ -18,7 +19,22 @@ if not os.path.exists(download_dir):
 @app.route('/')
 def index():
     return render_template('index.html')
+@app.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
 
+@app.route('/get_analysis')
+def get_analysis():
+    JSON_FILE_PATH = '..\\assets\\results\\analysis.json'
+    try:
+        with open(JSON_FILE_PATH, 'r') as file:
+            data = json.load(file)
+            # print(data)
+        return jsonify(data)
+    except FileNotFoundError:
+        return jsonify({"error": "Data file not found"}), 404
+    except json.JSONDecodeError:
+        return jsonify({"error": "Invalid JSON in data file"}), 500
 # AWS S3 Files Download Endpoint
 @app.route('/get_files', methods=['POST'])
 def get_files():
