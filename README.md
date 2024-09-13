@@ -34,9 +34,9 @@ Data Watchdog is a tool built to find and classify Personally Identifiable Infor
 
 ## Methodology
 
-<img src="assets/img/flowchart.png" alt="flowchart">
-
 We primarily deal with 4 types of files, which are Text Files (`.txt`, `.log`), Image Files (`.png`, `.jpg`, `.jpeg`), PDF Files (`.pdf`) and CSV Files (`.csv`). Details about each PII extraction process can be found <a href="model/README.md">here</a>
+
+<img src="assets/img/flowchart.png" alt="flowchart">
 
 ## Tech Stack
 
@@ -54,35 +54,28 @@ We primarily deal with 4 types of files, which are Text Files (`.txt`, `.log`), 
 
 ## File Structure
 ```
-👨‍💻Legal-Documentation-Assistant
- ┣ 📂assets                            // Contains all the reference gifs, images
+👨‍💻Data Watchdog
+ ┣ 📂assets
+ ┃ ┣ 📂img          
+ ┃ ┣ 📂temp                            // Sample files for testing
+ ┃ ┣ 📂results                         // Output
  ┣ 📂client                            // Frontend        
- ┃ ┣ 📂src                                      
- ┃ ┃ ┣ 📂components  
- ┃ ┃ ┃ ┣ 📄Chat.jsx
- ┃ ┃ ┣ 📄about.jsx
- ┃ ┃ ┣ 📄Faq.jsx
- ┃ ┃ ┣ 📄Home.jsx
- ┃ ┃ ┣ 📄InputForm.jsx
- ┃ ┃ ┣ 📄LoginPage.jsx
- ┃ ┣ 📂public 
- ┃ ┃ ┣ 📄index.html
- ┣ 📂model                             // Standalone model         
- ┃ ┣ 📄similarity.py                   // Based on Cosine Similarity
- ┃ ┣ 📄bot.py    
- ┃ ┣ 📄chat.py                         // To chat with the standalone model
- ┃ ┣ 📄model.py                        // Based on Bag of Words
- ┃ ┣ 📄train.py                        
- ┃ ┣ 📄dataset.py 
- ┃ ┣ 📄util.py   
- ┃ ┣ 📄trained_model.pth
- ┃ ┣ 📄intents.json                    // Dataset 
+ ┃ ┣ 📂static    
+ ┃ ┣ 📂templates    
+ ┃ ┃ ┣ 📄home.jsx
+ ┃ ┃ ┣ 📄configure.jsx
+ ┃ ┃ ┣ 📄dashboard.jsx                              
+ ┣ 📂model                                      
+ ┃ ┣ 📄detect.py                       // Core functionality
+ ┃ ┣ 📄utils.py 
+ ┃ ┣ 📄analytics.py
+ ┃ ┣ 📄postprocess.py
+ ┃ ┣ 📄main.py
+ ┃ ┣ 📄requirements.txt
+ ┃ ┣ 📄README.md            
  ┣ 📂server                            // Backend 
- ┃ ┣ 📂docs  
- ┃ ┃ ┣ 📄localfile.docx
- ┃ ┃ ┣ 📄Output2.docx
- ┃ ┣ 📄app.py 
- ┃ ┣ 📄createdatabase.py  
+ ┃ ┣ 📂archive  
+ ┃ ┣ 📄app.py  
  ┃ ┣ 📄requirements.txt      
  ┣ 📄README.md
 ``` 
@@ -94,55 +87,35 @@ We primarily deal with 4 types of files, which are Text Files (`.txt`, `.log`), 
 Clone the project by typing the following command in your Terminal/CommandPrompt
 
 ```
-git clone https://github.com/PritK99/Legal-Documentation-Assistant.git
+git clone git@github.com:PritK99/Data-Watchdog.git
 ```
-Navigate to the Legal Documentation Assistant folder
-
-```
-cd Legal-Documentation-Assistant
-```
-
-#### Frontend
-
-Open a new terminal in root folder and navigate to the client folder
+Navigate to the Data Watchdog folder
 
 ```
-cd client/
+cd Data-Watchdog
 ```
 
-Install all the required dependencies
-
-```
-npm i
-```
-
-To run the frontend
-
-```
-npm start
-```
-
-Once the above command is executed, the frontend will be running at ```localhost:3000```. You can visit http://localhost:3000/ to view the website.
-
-#### Backend
-
-Open a new terminal in root folder and navigate to the server folder 
-
-```
-cd server
-```
+#### Usage
 
 Create a virtual environment to install all the dependencies
 
 ```
-python -m venv docbuddy
+python -m venv data-watchdog
 ```
 
 Activate the virtual environment
 
-For Windows: ```docbuddy\Scripts\activate```
+For Windows: ```data-watchdog\Scripts\activate```
 
-For Linux: ```source docbuddy/bin/activate```
+For Linux: ```source data-watchdog/bin/activate```
+
+Install all the required dependencies
+
+Open a new terminal in root folder and navigate to the server folder
+
+```
+cd server/
+```
 
 Install all the required dependencies
 
@@ -150,50 +123,43 @@ Install all the required dependencies
 pip install -r requirements.txt
 ```
 
-To create a database on render and creating a environment file, follow the given steps
+<i>Note: Path to `poppler` and `pytesseract` are required in `utils.py` to perform pdf to image conversion and OCR respectively.
 
-1. Visit the [website](https://render.com/) and create an account or sign in. 
-2. Next, choose a new service as PostgreSQL to create a new database service. 
-3. Give an appropriate name to the database and the instance name.
-4. Select <b>Free</b> option in the Instance type and hit <b>Create Database</b> button at the bottom.
+For `poppler` refer <a href="https://github.com/oschwartz10612/poppler-windows/releases/tag/v24.07.0-0">here</a>.
 
-A new empty PostgreSQL database service will then be created. You can view all the services on your Render Dashboard.
-> **Note** <br>
-> The PostgreSQL database service will remain free on render only upto 3 months.
+For `pytesseract` refer <a href="https://tesseract-ocr.github.io/tessdoc/Installation.html">here</a>.
 
+Please replace the paths in `utils.py` with your paths.
 
-Next, create a .env file containing the credentials of your database. Sample .env file looks like:
-```
-DATABASE_HOST=your_database_host
-DATABASE_NAME=your_database_name
-DATABASE_USER=your_database_username
-PASSWORD=your_database_password
-DATABASE_PORT=your_database_port
-```
+Also change the path in `app.py` line `137` with your absolute path to `assets/results/output.csv` </i>
 
-> **Note** <br>
-> ```DATABASE_HOST``` in ```.env``` should be of form ```<Hostname>.<region>-postgres.render.com```. For example, if the region of database is ```Oregon (US West)```, then hostname can be ```<Hostname>.oregon-postgres.render.com```
-  
-
-You can get all this database credentials by visiting the PostgreSQL database service you created on your render dashboard.
-
-Once the .env file is setup, next run the createdatabase.py script using the following command in the terminal:
-```
-python server/createdatabase.py  
-```
-
-Running the createdatabase.py script will create the entire database for you.
-
-> **Note** <br>
-> If you want to create the PostgreSQL database on your local device instead of hosting on render, you are free to do so. But, you need to change the .env file accordingly.
-
-To run the backend
+Once all the above steps are completed, run the createdatabase.py script using the following command in the terminal in `server` directory:
 
 ```
-python app.py
+python app.py  
 ```
+
+Running the server will load the frontend at `http://localhost:5000/`
+
+<i>Note: The configuration page will require the configurations of SQL or Cloud that we want to analyze. For demo purpose we are using `PostgreSQL` using Render and `LocalStack` which allows us to simulate AWS cloud environment locally. For configuring these, steps are provided in <a href="Configure.md">Configure markdown file</a>.</i>
 
 ## Screenshots of the Website
+
+### Home Page
+
+<img src="assets/img/home page 1.png" alt="home page">
+
+<img src="assets/img/home page 2.png" alt="home page">
+
+### Configuration Page
+
+### Analytics and Dashboard
+
+<img src="assets/img/dashboard.png" alt="home page">
+
+### Output File
+
+<img src="assets/img/download.png" alt="home page">
 
 ## Contributors
 

@@ -1,45 +1,47 @@
 {
-    "total_risks": 145,
-    "mean_risk_score": 7.06,
+    "total_risks": 154,
+    "mean_risk_score": 7.7,
     "bucket distribution": {
-        "Personal": 108,
-        "Financial": 24,
-        "Miscellaneous": 10,
-        "Unknown": 3
+        "Financial": 68,
+        "Personal": 48,
+        "Miscellaneous": 24,
+        "Unknown": 14
     },
     "pii_counts_per_file": {
-        "form_queries.csv": 79,
+        "requests.log": 51,
+        "Han Kamber-1-3.pdf": 45,
         "digital_wallet_transactions.csv": 32,
         "my_personal_diary.txt": 17,
-        "ques_categories.csv": 5,
         "twitter_ss.jpg": 4,
-        "forms.csv": 3,
         "mastercard.jpg": 3,
         "services.csv": 2
     },
     "pii_counts_per_file_type": {
-        "csv": 121,
+        "log": 51,
+        "pdf": 45,
+        "csv": 34,
         "txt": 17,
         "jpg": 7
     },
     "mean_risk_per_file_type": {
-        "csv": 7.03,
+        "csv": 7.38,
         "jpg": 9.0,
+        "log": 8.47,
+        "pdf": 7.18,
         "txt": 6.47
     },
     "mean_risk_per_file": {
+        "Han Kamber-1-3.pdf": 7.18,
         "digital_wallet_transactions.csv": 7.42,
-        "form_queries.csv": 7.0,
-        "forms.csv": 3.0,
         "mastercard.jpg": 8.67,
         "my_personal_diary.txt": 6.47,
-        "ques_categories.csv": 7.0,
+        "requests.log": 8.47,
         "services.csv": 6.0,
         "twitter_ss.jpg": 9.25
     },
     "risk_distribution": {
-        "low": 12,
-        "medium": 113,
-        "high": 17
+        "low": 26,
+        "medium": 53,
+        "high": 61
     }
 }
