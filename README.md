@@ -62,9 +62,9 @@ We primarily deal with 4 types of files, which are Text Files (`.txt`, `.log`), 
  ┣ 📂client                            // Frontend        
  ┃ ┣ 📂static    
  ┃ ┣ 📂templates    
- ┃ ┃ ┣ 📄home.jsx
- ┃ ┃ ┣ 📄configure.jsx
- ┃ ┃ ┣ 📄dashboard.jsx                              
+ ┃ ┃ ┣ 📄home.html
+ ┃ ┃ ┣ 📄configure.html
+ ┃ ┃ ┣ 📄dashboard.html                            
  ┣ 📂model                                      
  ┃ ┣ 📄detect.py                       // Core functionality
  ┃ ┣ 📄utils.py 
@@ -123,15 +123,16 @@ Install all the required dependencies
 pip install -r requirements.txt
 ```
 
-<i>Note: Path to `poppler` and `pytesseract` are required in `utils.py` to perform pdf to image conversion and OCR respectively.
-
-For `poppler` refer <a href="https://github.com/oschwartz10612/poppler-windows/releases/tag/v24.07.0-0">here</a>.
-
-For `pytesseract` refer <a href="https://tesseract-ocr.github.io/tessdoc/Installation.html">here</a>.
-
-Please replace the paths in `utils.py` with your paths.
-
-Also change the path in `app.py` line `137` with your absolute path to `assets/results/output.csv` </i>
+> **Note** <br>
+> <i>Path to `poppler` and `pytesseract` are required in `utils.py` to perform pdf to image conversion and OCR respectively.
+>
+> For `poppler` refer <a href="https://github.com/oschwartz10612/poppler-windows/releases/tag/v24.07.0-0">here</a>.
+>
+> For `pytesseract` refer <a href="https://tesseract-ocr.github.io/tessdoc/Installation.html">here</a>.
+>
+> Please replace the paths in `utils.py` with your paths.
+>
+> Also change the path in `app.py` line `137` with your absolute path to `assets/results/output.csv` </i>
 
 Once all the above steps are completed, run the createdatabase.py script using the following command in the terminal in `server` directory:
 
@@ -141,7 +142,8 @@ python app.py
 
 Running the server will load the frontend at `http://localhost:5000/`
 
-<i>Note: The configuration page will require the configurations of SQL or Cloud that we want to analyze. For demo purpose we are using `PostgreSQL` using Render and `LocalStack` which allows us to simulate AWS cloud environment locally. For configuring these, steps are provided in <a href="Configure.md">Configure markdown file</a>.</i>
+> **Note** <br>
+><i>The configuration page will require the configurations of SQL or Cloud that we want to analyze. For demo purpose we are using `PostgreSQL` using Render and `LocalStack` which allows us to simulate AWS cloud environment locally. For configuring these, steps are provided in <a href="Configure.md">Configure markdown file</a>.</i>
 
 ## Screenshots of the Website
 
@@ -153,13 +155,15 @@ Running the server will load the frontend at `http://localhost:5000/`
 
 ### Configuration Page
 
+<img src="assets/img/config page.png" alt="config page">
+
 ### Analytics and Dashboard
 
-<img src="assets/img/dashboard.png" alt="home page">
+<img src="assets/img/dashboard.png" alt="dashboard page">
 
 ### Output File
 
-<img src="assets/img/download.png" alt="home page">
+<img src="assets/img/download.png" alt="output.csv">
 
 ## Contributors
 

@@ -79,23 +79,23 @@ Han Kamber-1-3.pdf,Han,personal,Personal,7,pdf
 mastercard.jpg,9412 7512 3412,aadhar,Personal,9,jpg
 mastercard.jpg,9412 7512 3412 3456,creditcard,Financial,10,jpg
 mastercard.jpg,Lee M Card,personal,Personal,7,jpg
-my_personal_diary.txt,lancevance@gmail.com,email,Personal,5,txt
-my_personal_diary.txt,919999999999,phone,Personal,6,txt
-my_personal_diary.txt,919999999999,aadhar,Personal,9,txt
-my_personal_diary.txt,400809,pincode,Personal,5,txt
-my_personal_diary.txt,172.182.99.1,ip,Miscellaneous,4,txt
-my_personal_diary.txt,919999999999,bank_account,Financial,9,txt
-my_personal_diary.txt,172,cvv,Financial,10,txt
-my_personal_diary.txt,182,cvv,Financial,10,txt
-my_personal_diary.txt,919999999999,ration card,Personal,8,txt
-my_personal_diary.txt,Jelum Towers,location,Personal,6,txt
-my_personal_diary.txt,Vice City,location,Personal,6,txt
-my_personal_diary.txt,Sonny,personal,Personal,7,txt
-my_personal_diary.txt,Vice City,location,Personal,6,txt
-my_personal_diary.txt,Malibu,organization,Miscellaneous,3,txt
-my_personal_diary.txt,Club,location,Personal,6,txt
-my_personal_diary.txt,Lance Vance,personal,Personal,7,txt
-my_personal_diary.txt,The Dockyards,organization,Miscellaneous,3,txt
+my_personal_diary.docx,lancevance@gmail.com,email,Personal,5,docx
+my_personal_diary.docx,919999999999,phone,Personal,6,docx
+my_personal_diary.docx,919999999999,aadhar,Personal,9,docx
+my_personal_diary.docx,400809,pincode,Personal,5,docx
+my_personal_diary.docx,172.182.99.1,ip,Miscellaneous,4,docx
+my_personal_diary.docx,919999999999,bank_account,Financial,9,docx
+my_personal_diary.docx,172,cvv,Financial,10,docx
+my_personal_diary.docx,182,cvv,Financial,10,docx
+my_personal_diary.docx,919999999999,ration card,Personal,8,docx
+my_personal_diary.docx,Jelum Towers,location,Personal,6,docx
+my_personal_diary.docx,Vice City,location,Personal,6,docx
+my_personal_diary.docx,Sonny,personal,Personal,7,docx
+my_personal_diary.docx,Vice City,location,Personal,6,docx
+my_personal_diary.docx,Malibu,organization,Miscellaneous,3,docx
+my_personal_diary.docx,Club,location,Personal,6,docx
+my_personal_diary.docx,Lance Vance,personal,Personal,7,docx
+my_personal_diary.docx,The Dockyards,organization,Miscellaneous,3,docx
 requests.log,89.110.150.203,ip,Miscellaneous,4,log
 requests.log,89.110.150.203,ip,Miscellaneous,4,log
 requests.log,210.243.170.181,ip,Miscellaneous,4,log
@@ -147,8 +147,6 @@ requests.log,200,cvv,Financial,10,log
 requests.log,200,cvv,Financial,10,log
 requests.log,200,cvv,Financial,10,log
 requests.log,200,cvv,Financial,10,log
-services.csv,##mark Copyright,miscellaneous,Unknown,,csv
-services.csv,India,location,Personal,6,csv
 twitter_ss.jpg,4216-8701-5010-2349,creditcard,Financial,10,jpg
 twitter_ss.jpg,207,cvv,Financial,10,jpg
 twitter_ss.jpg,895,cvv,Financial,10,jpg

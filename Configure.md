@@ -17,11 +17,21 @@ A new empty PostgreSQL database service will then be created. You can view all t
 
 To create cloud locally using LocalStack, follow the steps given below
 
-1. Install Docker on your machine.
+1. Install Docker on your machine and run the docker engine.
 2. Pull and run LocalStack in Docker: ```docker run --rm -it -p 4566:4566 -p 4510-4559:4510-4559 localstack/localstack```
+
+<img src="assets/img/docker config.png" alt="docker run">
+
 3. Install AWS on your machine
 4. Run: ```aws configure```
 5. Setup the required credentials
 6. Once LocalStack is running, you can create an S3 bucket with the AWS CLI: ```aws --endpoint-url=http://localhost:4566 s3 mb s3://my-pii-bucket```
+
+<img src="assets/img/bucket config.png" alt="docker run">
+
 7. Now, you can upload your files to bucket using: ```aws --endpoint-url=http://localhost:4566 s3 cp /path/to/your/file.txt s3://my-pii-bucket/```
 
+<img src="assets/img/upload config.png" alt="docker run">
+
+> **Note** <br>
+> Please ensure the filename does not have any spaces. In case of spaces in file name, enclose the entire path in double quotes.
