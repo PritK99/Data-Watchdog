@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, send_file
 import boto3
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 import os
@@ -127,6 +127,11 @@ def connect_postgres():
 
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
+
+@app.route('/download_csv', methods=['GET'])
+def download_csv():
+    path = r"C:\Users\pritp\OneDrive\Desktop\Data-Watchdog\assets\results\output.csv"
+    return send_file(path, as_attachment=True)
 
 if __name__ == '__main__':
     app.run(debug=True)

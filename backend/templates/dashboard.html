@@ -15,10 +15,10 @@
       }
 
       header {
-        background-color: #1f78d1;
-        color: white;
+        background-color: #1c1c1c;
         padding: 20px;
         text-align: center;
+        border-bottom: 1px solid #333;
         font-size: 1.8rem;
       }
       .dashboard-container {
@@ -78,10 +78,11 @@
         color: #721c24;
       }
       footer {
-        background-color: #1f78d1;
-        color: white;
+        background-color: #1c1c1c;
+        padding: 15px;
         text-align: center;
-        padding: 10px 0;
+        color: #777;
+        border-top: 1px solid #333;
         margin-top: 40px;
         position: relative;
       }
@@ -118,9 +119,9 @@
         <div class="card">
           <h2>Overview</h2>
           <p>Total Risks: <span id="totalRisks"></span></p>
-          <p>Mean Risk Score: <span id="meanRiskScore"></span></p>
+          <p>Mean Risk Score: <span id="meanRiskScore"></span> / 10 </p>
           <!-- Download Button for CSV file -->
-          <a href="/temp.csv" class="download-btn" download>Download Results</a>
+          <a href="/download_csv" class="download-btn" download>Download Results</a>
         </div>
         <div class="card">
           <h2>Bucket Distribution</h2>
