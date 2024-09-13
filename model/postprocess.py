@@ -84,7 +84,7 @@ def convert_to_csv(global_pii_results: list):
     risks = []
 
     for file_result in global_pii_results:
-        file_name = file_result[0][21:] 
+        file_name = file_result[0][20:] 
         file_pii = file_result[1] 
 
         for result in file_pii:

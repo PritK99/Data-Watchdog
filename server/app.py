@@ -14,7 +14,11 @@ sys.path.append(parent_dir)
 
 from model.main import get_pii
 
-app = Flask(__name__)
+# Define paths to templates and static folders
+templates_folder = os.path.join(current_dir, '..', 'client', 'templates')
+static_folder = os.path.join(current_dir, '..', 'client', 'static')
+
+app = Flask(__name__, template_folder=templates_folder, static_folder=static_folder)
 
 # Path where files will be downloaded
 download_dir = os.getcwd() + '\downloads'
@@ -97,7 +101,7 @@ def connect_postgres():
         # Connect to PostgreSQL
         engine = create_engine(f'postgresql+psycopg2://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}')
 
-# Create an inspector object to get table names
+        # Create an inspector object to get table names
         inspector = inspect(engine)
 
         # Get all table names

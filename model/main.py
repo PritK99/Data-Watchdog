@@ -17,7 +17,7 @@ logging.basicConfig(filename='results.log', level=logging.INFO,
 
 # Define the path to the temporary folder where files are stored
 # temp_folder = '../assets/temp'
-temp_folder = '../backend/downloads'
+temp_folder = '../server/downloads'
 
 def list_files_recursive(folder_path):
     """

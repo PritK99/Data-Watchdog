@@ -1,0 +1,14 @@
+Flask
+boto3
+opencv-python
+pandas
+pdf2image
+pypandoc
+pypdf2
+python-docx
+pytesseract
+psycopg2
+openpyxl
+sqlalchemy
+torch
+transformers
