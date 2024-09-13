@@ -105,10 +105,6 @@ requests.log,210.243.170.181,ip,Miscellaneous,4,log
 requests.log,210.243.170.181,ip,Miscellaneous,4,log
 requests.log,210.243.170.181,ip,Miscellaneous,4,log
 requests.log,210.243.170.181,ip,Miscellaneous,4,log
-requests.log,72.93.200.84,ip,Miscellaneous,4,log
-requests.log,72.93.200.84,ip,Miscellaneous,4,log
-requests.log,72.93.200.84,ip,Miscellaneous,4,log
-requests.log,72.93.200.84,ip,Miscellaneous,4,log
 requests.log,110,cvv,Financial,10,log
 requests.log,150,cvv,Financial,10,log
 requests.log,203,cvv,Financial,10,log
@@ -143,10 +139,6 @@ requests.log,210,cvv,Financial,10,log
 requests.log,243,cvv,Financial,10,log
 requests.log,170,cvv,Financial,10,log
 requests.log,181,cvv,Financial,10,log
-requests.log,200,cvv,Financial,10,log
-requests.log,200,cvv,Financial,10,log
-requests.log,200,cvv,Financial,10,log
-requests.log,200,cvv,Financial,10,log
 twitter_ss.jpg,4216-8701-5010-2349,creditcard,Financial,10,jpg
 twitter_ss.jpg,207,cvv,Financial,10,jpg
 twitter_ss.jpg,895,cvv,Financial,10,jpg
