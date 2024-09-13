@@ -40,7 +40,7 @@ Install all the required libraries
 
 Create a directory named `assets/temp/` in the home directory. This folder will act as a staging area for files to be processed. The supported file formats are: `.txt`, `.log`, `.pdf`, `.docx`, `.jpg`, `.png`, `.jpeg`, and `.csv`.
 
-To run the standalone model
+To run the standalone model, first resolve all the import errors.
 
 `python main.py`
 

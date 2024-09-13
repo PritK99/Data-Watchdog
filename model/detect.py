@@ -2,7 +2,7 @@
 import re
 import logging
 import pandas as pd
-from utils import process_csv
+from .utils import process_csv
 from transformers import AutoTokenizer, AutoModelForTokenClassification
 from transformers import pipeline
 

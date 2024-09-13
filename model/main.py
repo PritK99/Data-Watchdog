@@ -1,9 +1,15 @@
 import os
+import sys
 import logging
-from detect import detect_pii_from_string, detect_pii_from_csv
-from utils import process_txt_or_log, process_pdf, process_docx, process_image
-from postprocess import assign_bucket_and_risk, convert_to_csv
-from analytics import analyze
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+sys.path.append(parent_dir)
+
+from .detect import detect_pii_from_string, detect_pii_from_csv
+from .utils import process_txt_or_log, process_pdf, process_docx, process_image
+from .postprocess import assign_bucket_and_risk, convert_to_csv
+from .analytics import analyze
 
 # Configure logging to store results in a log file
 logging.basicConfig(filename='results.log', level=logging.INFO,
@@ -34,6 +40,8 @@ def get_pii():
     # Get a list of all files in the temporary folder
     files = list_files_recursive(temp_folder)
     global_pii_results = []
+
+    print(files)
 
     for file in files:
         # Process text and log files
@@ -80,4 +88,4 @@ def get_pii():
 
     return analysis_json, pii_results_df
 
-analysis_json, pii_results_df = get_pii()
+# analysis_json, pii_results_df = get_pii()

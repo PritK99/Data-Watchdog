@@ -140,11 +140,10 @@
         function updateDashboard(data) {
             try {
                 console.log('Updating dashboard with data:', data);
-                
-                updateElementText('totalRisks', data.total_risks);
-                updateElementText('meanRiskScore', data.mean_risk_score.toFixed(2));
 
-                createPieChart('bucketDistributionChart', data.bucket_distribution, 'Bucket Distribution');
+                updateElementText('totalRisks', data["total_risks"]);
+                updateElementText('meanRiskScore', data["mean_risk_score"]);
+                createPieChart('bucketDistributionChart', data["bucket distribution"], 'Bucket Distribution');
                 createPieChart('riskDistributionChart', data.risk_distribution, 'Risk Distribution');
                 createPieChart('meanRiskPerFileChart', data.mean_risk_per_file, 'Mean Risk per File');
                 createBarChart('piiCountsPerFileTypeChart', data.pii_counts_per_file_type, 'PII Counts per File Type');

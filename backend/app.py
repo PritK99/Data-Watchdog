@@ -12,9 +12,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
 
-# Importing models
-# TO DO
-# from model.main import get_pii
+from model.main import get_pii
 
 app = Flask(__name__)
 
@@ -27,11 +25,11 @@ if not os.path.exists(download_dir):
 
 @app.route('/')
 def index():
-    return render_template('new.html')
+    return render_template('home.html')
 
 @app.route('/configure')
 def configure():
-    return render_template('index.html')
+    return render_template('configure.html')
 
 @app.route('/dashboard')
 def dashboard():
@@ -39,16 +37,10 @@ def dashboard():
 
 @app.route('/get_analysis')
 def get_analysis():
-    JSON_FILE_PATH = '..\\assets\\results\\analysis.json'
-    try:
-        with open(JSON_FILE_PATH, 'r') as file:
-            data = json.load(file)
-            # print(data)
-        return jsonify(data)
-    except FileNotFoundError:
-        return jsonify({"error": "Data file not found"}), 404
-    except json.JSONDecodeError:
-        return jsonify({"error": "Invalid JSON in data file"}), 500
+    analysis_json, pii_results_df = get_pii()
+    print(analysis_json)
+    return analysis_json
+        
 # AWS S3 Files Download Endpoint
 @app.route('/get_files', methods=['POST'])
 def get_files():
@@ -135,12 +127,6 @@ def connect_postgres():
 
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
-
-@app.route('/get_analytics', methods=['GET'])
-def get_analytics():
-    # The results are also stored in assets folder
-    analysis_json, pii_results_df = get_pii()
-    return analysis_json
 
 if __name__ == '__main__':
     app.run(debug=True)
