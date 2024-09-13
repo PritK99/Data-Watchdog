@@ -7,78 +7,168 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
+        /* Global Styles */
         body {
             font-family: 'IBM Plex Sans', sans-serif;
-            background-color: #000; /* Black background */
-            color: #fff; /* White text */
+            background-color: #121212; /* Dark background */
+            color: #fff;
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
+
+        /* Header Styles */
+        header {
+            background-color: #1c1c1c;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #333;
+        }
+
+        header h1 {
+            margin: 0;
+            color: #fff;
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: #1c1c1c;
+            padding: 15px;
+            text-align: center;
+            color: #777;
+            border-top: 1px solid #333;
+        }
+
+        /* Main Container Styles */
         .container {
             display: flex;
             justify-content: space-between;
+            flex-wrap: wrap;
             width: 100%;
             max-width: 1200px;
+            margin: auto;
             padding: 20px;
         }
+
+        /* Form Container */
         .form-container {
-            background-color: #333; /* Darker background for the form */
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            background-color: #1e1e1e;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
             max-width: 500px;
-            margin: 10px;
-            color: #fff;
+            margin: 15px;
+            width: 100%;
+            transition: transform 0.2s ease;
         }
+
+        .form-container:hover {
+            transform: translateY(-5px);
+        }
+
         h2, h3 {
             text-align: center;
-            color: #fff;
+            color: #f0f0f0;
         }
+
         label {
             font-weight: 600;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             display: block;
         }
+
         input[type="text"], input[type="password"] {
             width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #555; /* Darker border */
-            border-radius: 4px;
-            font-size: 14px;
-            background-color: #444; /* Darker input background */
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #555;
+            border-radius: 5px;
+            font-size: 15px;
+            background-color: #2a2a2a;
             color: #fff;
+            transition: border-color 0.3s ease, background-color 0.3s ease;
         }
+
+        input[type="text"]:focus, input[type="password"]:focus {
+            border-color: #3498db;
+            background-color: #333;
+        }
+
         button {
             width: 100%;
-            background-color: #3498db;
+            background-image: linear-gradient(45deg, #3498db, #2980b9);
             color: white;
-            padding: 10px;
+            padding: 12px;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             font-size: 16px;
             cursor: pointer;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
         }
+
         button:hover {
-            background-color: #2980b9;
+            background-image: linear-gradient(45deg, #2980b9, #1c6ea4);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.5);
         }
+
+        /* Result Button Styling */
         .result-button {
             text-align: center;
             margin-top: 20px;
+            display: none; /* Initially hidden */
         }
+
         .result-button button {
-            background-color: #2ecc71; /* Green button for results */
+            background-image: linear-gradient(45deg, #2ecc71, #27ae60);
+            width: auto;
+            padding: 12px 30px;
         }
+
         .result-button button:hover {
-            background-color: #27ae60;
+            background-image: linear-gradient(45deg, #27ae60, #1e8d4e);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.5);
+        }
+
+        /* Pulsing Animation */
+        .result-button button {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .form-container {
+                max-width: 100%;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Header Section -->
+    <header>
+        <h1>Cloud & PostgreSQL Credentials</h1>
+    </header>
+
+    <!-- Main Content -->
     <div class="container">
         <div class="form-container">
             <h2>Enter AWS Cloud Storage Credentials</h2>
@@ -121,22 +211,26 @@
         </div>
     </div>
 
-    <div class="result-button">
-        <button id="results-button" style="display: none;">Results</button>
+    <!-- Result Button -->
+    <div class="result-button" id="result-container">
+        <button id="results-button">View Results</button>
     </div>
 
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2024 Data Watchdog. All rights reserved.</p>
+    </footer>
+
     <script>
-        // AWS Cloud Credentials Form Submission
         let cloudSuccess = false;
         let postgresSuccess = false;
 
         document.getElementById("cloud-credentials-form").onsubmit = async function(event) {
-            event.preventDefault();  // Prevent form from reloading the page
+            event.preventDefault();
             const accessKey = document.getElementById("access-key").value;
             const secretKey = document.getElementById("secret-key").value;
             const region = document.getElementById("region").value;
 
-            // Send the cloud credentials to the backend (Flask)
             try {
                 const response = await fetch("/get_files", {
                     method: "POST",
@@ -158,26 +252,22 @@
                     document.getElementById("cloud-message").innerText = "Error: " + data.message;
                     cloudSuccess = false;
                 }
-
                 updateResultButtonVisibility();
             } catch (error) {
-                console.error("Error submitting AWS credentials:", error);
                 document.getElementById("cloud-message").innerText = "Error: Unable to submit AWS credentials.";
                 cloudSuccess = false;
                 updateResultButtonVisibility();
             }
         };
 
-        // PostgreSQL Credentials Form Submission
         document.getElementById("postgres-credentials-form").onsubmit = async function(event) {
-            event.preventDefault();  // Prevent form from reloading the page
+            event.preventDefault();
             const dbHost = document.getElementById("db-host").value;
             const dbPort = document.getElementById("db-port").value;
             const dbName = document.getElementById("db-name").value;
             const dbUser = document.getElementById("db-user").value;
             const dbPassword = document.getElementById("db-password").value;
 
-            // Send the PostgreSQL credentials to the backend (Flask)
             try {
                 const response = await fetch("/connect_postgres", {
                     method: "POST",
@@ -201,10 +291,8 @@
                     document.getElementById("postgres-message").innerText = "Error: " + data.message;
                     postgresSuccess = false;
                 }
-
                 updateResultButtonVisibility();
             } catch (error) {
-                console.error("Error submitting PostgreSQL credentials:", error);
                 document.getElementById("postgres-message").innerText = "Error: Unable to submit PostgreSQL credentials.";
                 postgresSuccess = false;
                 updateResultButtonVisibility();
@@ -212,15 +300,13 @@
         };
 
         function updateResultButtonVisibility() {
-            // Show the Results button if at least one form submission is successful
             if (cloudSuccess || postgresSuccess) {
-                document.getElementById("results-button").style.display = "block";
+                document.getElementById("result-container").style.display = "block";
             } else {
-                document.getElementById("results-button").style.display = "none";
+                document.getElementById("result-container").style.display = "none";
             }
         }
 
-        // Redirect to /dashboard when the results button is clicked
         document.getElementById("results-button").onclick = function() {
             window.location.href = "/dashboard";
         };
