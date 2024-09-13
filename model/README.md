@@ -20,28 +20,73 @@ Utilizes pre-trained models to identify PII such as personal names, locations, a
 
 Create a virtual environment
 
-`python -m venv data-watchdog`
+```py
+python -m venv data-watchdog
+```
 
 Activate the virtual environment
 
-`.\data-watchdog\Scripts\activate`
+```
+.\data-watchdog\Scripts\activate
+```
+
+*Note*: If this doesn't work, try navigating to `Scripts` directory and run `source activate`.
 
 Navigate to the model folder
 
-`cd model`
+```py
+cd model
+```
 
 Install all the required libraries
 
-`pip install -r .\requirements.txt`
+```py
+pip install -r .\requirements.txt
+```
 
 *Note*: Path to `poppler` and `pytesseract` are required in `utils.py` to perform pdf to image conversion and OCR respectively.
 
 ## Usage
 
-Create a directory named `assets/temp/` in the home directory. This folder will act as a staging area for files to be processed. The supported file formats are: `.txt`, `.log`, `.pdf`, `.docx`, `.jpg`, `.png`, `.jpeg`, and `.csv`.
+Create a directory named `backend/downloads/` from the home directory. This folder will act as a staging area for files to be processed. The supported file formats are: `.txt`, `.log`, `.pdf`, `.docx`, `.jpg`, `.png`, `.jpeg`, and `.csv`. You can either use the files provided in `assets/temp` or use your own files of compatible file formats.
 
-To run the standalone model, first resolve all the import errors.
+To run the standalone model, first we need to resolve all the imports by replacing code at 2 places.
 
-`python main.py`
+1) Replace the code section in `main.py` from
+
+```py
+from .detect import detect_pii_from_string, detect_pii_from_csv
+from .utils import process_txt_or_log, process_pdf, process_docx, process_image
+from .postprocess import assign_bucket_and_risk, convert_to_csv
+from .analytics import analyze
+```
+
+to
+
+```
+from detect import detect_pii_from_string, detect_pii_from_csv
+from utils import process_txt_or_log, process_pdf, process_docx, process_image
+from postprocess import assign_bucket_and_risk, convert_to_csv
+from analytics import analyze
+```
+
+2) Replace the code line in `detect.py` from
+
+```py
+from .utils import process_csv
+```
+to
+
+```
+from utils import process_csv
+```
+
+We also need to uncomment the line `91` to call the function.
+
+To run the standalone model after making the changes as mentioned above
+
+```py
+python main.py
+```
 
 All the results will be logged into `results.log`
