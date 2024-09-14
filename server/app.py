@@ -134,7 +134,9 @@ def connect_postgres():
 
 @app.route('/download_csv', methods=['GET'])
 def download_csv():
-    path = r"C:\Users\pritp\OneDrive\Desktop\Data-Watchdog\assets\results\output.csv"
+    path = os.getcwd();
+    path = path[0:-7]
+    path += r"\assets\results\output.csv"
     return send_file(path, as_attachment=True)
 
 if __name__ == '__main__':

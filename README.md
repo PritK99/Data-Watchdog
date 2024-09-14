@@ -134,7 +134,6 @@ pip install -r requirements.txt
 >
 > Please replace the paths in `utils.py` with your paths.
 >
-> Also change the path in `app.py` line `137` with your absolute path to `assets/results/output.csv` </i>
 
 Once all the above steps are completed, run the createdatabase.py script using the following command in the terminal in `server` directory:
 
