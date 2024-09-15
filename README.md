@@ -26,7 +26,7 @@ Data Watchdog is a tool built to find and classify Personally Identifiable Infor
 
 2. PII Detection: Detects personal data using machine learning and other techniques.
 
-3. Risk Assessment: Calculates a risk score based on the type and volume of detected PII.
+3. Risk Assessment: Calculates a risk score based on the type of detected PII.
 
 4. Data Visualization: Shows the analytics associated with detect PII.
 
@@ -38,7 +38,13 @@ https://github.com/user-attachments/assets/597ad48b-8e24-47e1-8d08-26b8420f3aae
 
 We primarily deal with 4 types of files, which are Text Files (`.txt`, `.log`), Image Files (`.png`, `.jpg`, `.jpeg`), PDF Files (`.pdf`) and CSV Files (`.csv`). Details about each PII extraction process can be found <a href="model/README.md">here</a>
 
+### Flowchart
+
 <img src="assets/img/flowchart.png" alt="flowchart">
+
+### Sequence Diagram
+
+### API Diagram
 
 ## Tech Stack
 

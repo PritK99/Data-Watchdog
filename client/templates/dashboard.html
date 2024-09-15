@@ -153,6 +153,18 @@
             <canvas id="piiCountsPerFileChart"></canvas>
           </div>
         </div>
+        <div class="card">
+          <h2>Mean Risk per File</h2>
+          <div class="chart-container">
+            <canvas id="riskPerFileChart"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <h2>Top PII Categories</h2>
+          <div class="chart-container">
+            <canvas id="topCategories"></canvas>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -204,6 +216,7 @@
 
           updateElementText("totalRisks", data["total_risks"]);
           updateElementText("meanRiskScore", data["mean_risk_score"]);
+
           createPieChart(
             "bucketDistributionChart",
             data["bucket distribution"],
@@ -213,11 +226,6 @@
             "riskDistributionChart",
             data.risk_distribution,
             "Risk Distribution"
-          );
-          createPieChart(
-            "meanRiskPerFileChart",
-            data.mean_risk_per_file,
-            "Mean Risk per File"
           );
           createBarChart(
             "piiCountsPerFileTypeChart",
@@ -233,6 +241,16 @@
             "piiCountsPerFileChart",
             data.pii_counts_per_file,
             "PII Counts per File"
+          );
+          createLineChart(
+            "riskPerFileChart",
+            data.mean_risk_per_file,
+            "Mean Risk per File"
+          );
+          createBarChart(
+            "topCategories",
+            data.top_categories,
+            "Top PII Categories"
           );
 
           document.getElementById("loadingMessage").style.display = "none";
@@ -268,6 +286,14 @@
                   "#9966FF",
                   "#FF9F40",
                 ],
+                hoverBackgroundColor: [
+                  "#FF6384",
+                  "#36A2EB",
+                  "#FFCE56",
+                  "#4BC0C0",
+                  "#9966FF",
+                  "#FF9F40",
+                ],
               },
             ],
           },
@@ -275,6 +301,10 @@
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
+              legend: {
+                display: true,
+                position: "bottom",
+              },
               title: {
                 display: true,
                 text: title,
@@ -298,7 +328,9 @@
             datasets: [
               {
                 data: Object.values(data),
-                backgroundColor: "#36A2EB",
+                backgroundColor: "rgba(75, 192, 192, 0.2)",
+                borderColor: "rgba(75, 192, 192, 1)",
+                borderWidth: 1,
               },
             ],
           },
@@ -323,19 +355,61 @@
         });
       }
 
-      // Fetch data and update dashboard
-      fetchData()
-        .then((data) => {
-          console.log("Successfully fetched data, updating dashboard");
+      function createLineChart(elementId, data, title) {
+        const canvas = document.getElementById(elementId);
+        if (!canvas) {
+          console.error(`Canvas element with id "${elementId}" not found`);
+          return;
+        }
+        console.log(`Creating line chart: ${title}`, data);
+        new Chart(canvas.getContext("2d"), {
+          type: "line",
+          data: {
+            labels: Object.keys(data),
+            datasets: [
+              {
+                data: Object.values(data),
+                backgroundColor: "rgba(54, 162, 235, 0.2)",
+                borderColor: "rgba(54, 162, 235, 1)",
+                borderWidth: 1,
+                fill: true,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false,
+              },
+              title: {
+                display: true,
+                text: title,
+              },
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
+            },
+          },
+        });
+      }
+
+      async function initializeDashboard() {
+        try {
+          const data = await fetchData();
           updateDashboard(data);
-        })
-        .catch((error) => {
-          console.error("Error in main execution:", error);
+        } catch (error) {
           displayError(
             "Failed to load data. Please try again later.",
             error.toString()
           );
-        });
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", initializeDashboard);
     </script>
   </body>
 </html>

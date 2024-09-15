@@ -30,16 +30,16 @@ pii_patterns = {
 
 # Possible PII column names and their types
 pii_cols = {
-    "id": "personal",
-    "user_id": "personal",
-    "name": "personal",
-    "username": "personal",
-    "full name": "personal",
-    "first name": "personal",
-    "last name": "personal",
-    "middle name": "personal",
-    "given name": "personal",
-    "surname": "personal",
+    "id": "id",
+    "user_id": "id",
+    "name": "name",
+    "username": "name",
+    "full name": "name",
+    "first name": "name",
+    "last name": "name",
+    "middle name": "name",
+    "given name": "name",
+    "surname": "name",
     "email address": "email",
     "email": "email",
     "phone number": "phone",
@@ -58,17 +58,17 @@ pii_cols = {
     "country": "location",
     "date of birth": "dob",
     "dob": "dob",
-    "username": "personal",
-    "user id": "personal",
-    "login id": "personal",
-    "account id": "personal",
-    "employee id": "personal",
-    "employee number": "personal",
+    "username": "id",
+    "user id": "id",
+    "login id": "id",
+    "account id": "id",
+    "employee id": "id",
+    "employee number": "id",
     "department": "organization",
-    "position": "personal",
-    "unique identifier": "personal",
-    "student id": "personal",
-    "customer id": "personal",
+    "position": "id",
+    "unique identifier": "id",
+    "student id": "id",
+    "customer id": "id",
     "voter id": "voters id",
     "voter identification number": "voters id",
     "ip address": "ip",
@@ -87,7 +87,7 @@ pii_cols = {
     "account number": "bank_account",
     "bank account": "bank_account",
     "payment information": "bank_account",
-    "insurance": "personal",
+    "insurance": "insurance",
     "tax id": "tin",
     "tax identification number": "tin",
     "driver license": "drivers_license",
@@ -98,7 +98,7 @@ pii_cols = {
     "health record number": "medical",
     "medical record number": "medical",
     "medical history": "medical",
-    "transaction_id": "financial",
+    "transaction_id": "transaction_id",
 }
 
 # Load the tokenizer and model for Named Entity Recognition (NER)
@@ -150,7 +150,7 @@ def detect_using_ner(input_str: str):
         if instance[1] == "LOC":
             instance[1] = "location"
         elif instance[1] == "PER":
-            instance[1] = "personal"
+            instance[1] = "name"
         elif instance[1] == "ORG":
             instance[1] = "organization"
         else:

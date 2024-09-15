@@ -134,7 +134,7 @@ def connect_postgres():
 
 @app.route('/download_csv', methods=['GET'])
 def download_csv():
-    path = os.getcwd();
+    path = os.getcwd()
     path = path[0:-7]
     path += r"\assets\results\output.csv"
     return send_file(path, as_attachment=True)

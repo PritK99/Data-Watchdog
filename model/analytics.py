@@ -57,6 +57,13 @@ def analyze(df):
 
     analysis_dict["risk_distribution"] = risk_distribution
 
+    # Calculate top 5 categories with their counts
+    top_categories = df['category'].value_counts().head(5).to_dict()
+    analysis_dict["top_categories"] = {
+        to_python_type(cat): to_python_type(count)
+        for cat, count in top_categories.items()
+    }
+
     # Convert the analysis dictionary to a JSON string
     analysis_json = json.dumps(analysis_dict, indent=4)
     
