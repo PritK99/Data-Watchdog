@@ -38,7 +38,7 @@ https://github.com/user-attachments/assets/597ad48b-8e24-47e1-8d08-26b8420f3aae
 
 We primarily deal with 4 types of files, which are Text Files (`.txt`, `.log`), Image Files (`.png`, `.jpg`, `.jpeg`), PDF Files (`.pdf`) and CSV Files (`.csv`). Details about each PII extraction process can be found <a href="model/README.md">here</a>
 
-### Flowchart
+### High Level Design
 
 <img src="assets/img/flowchart.png" alt="flowchart">
 
@@ -46,7 +46,8 @@ We primarily deal with 4 types of files, which are Text Files (`.txt`, `.log`), 
 
 <img src="assets/img/sequence diagram.png" alt="sequence diagram">
 
-### API Diagram
+### API Contract
+API Contract for the project can be found <a href="api_contract.yaml">here</a>
 
 ## Tech Stack
 
