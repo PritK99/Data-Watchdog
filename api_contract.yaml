@@ -1,0 +1,198 @@
+openapi: 3.0.0
+info:
+  title: Flask Application API
+  version: 1.0.0
+paths:
+  /:
+    get:
+      summary: Home page
+      responses:
+        '200':
+          description: Successful response
+          content:
+            text/html:
+              schema:
+                type: string
+
+  /configure:
+    get:
+      summary: Configuration page
+      responses:
+        '200':
+          description: Successful response
+          content:
+            text/html:
+              schema:
+                type: string
+
+  /dashboard:
+    get:
+      summary: Dashboard page
+      responses:
+        '200':
+          description: Successful response
+          content:
+            text/html:
+              schema:
+                type: string
+
+  /get_analysis:
+    get:
+      summary: Get PII analysis from model
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_risks:
+                    type: integer
+                  mean_risk_score:
+                    type: number
+                    format: float
+                  bucket_distribution:
+                    type: object
+                    additionalProperties:
+                      type: integer
+                  pii_counts_per_file:
+                    type: object
+                    additionalProperties:
+                      type: integer
+                    example:
+                      "file1.csv": 79
+                      "file2.csv": 5
+                  pii_counts_per_file_type:
+                    type: object
+                    additionalProperties:
+                      type: integer
+                    example:
+                      "csv": 89
+                      "txt": 10
+                  mean_risk_per_file_type:
+                    type: object
+                    additionalProperties:
+                      type: number
+                      format: float
+                    example:
+                      "csv": 4.97
+                      "txt": 3.5
+                  mean_risk_per_file:
+                    type: object
+                    additionalProperties:
+                      type: number
+                      format: float
+                    example:
+                      "file1.csv": 5.0
+                      "file2.csv": 3.0
+                  risk_distribution:
+                    type: object
+                    properties:
+                      low:
+                        type: integer
+                      medium:
+                        type: integer
+                      high:
+                        type: integer
+                  top_categories:
+                    type: object
+                    additionalProperties:
+                      type: integer
+                    example:
+                      "id": 84
+                      "miscellaneous": 2
+
+  /get_files:
+    post:
+      summary: Download files from AWS S3
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                access_key:
+                  type: string
+                secret_key:
+                  type: string
+                region:
+                  type: string
+              required:
+                - access_key
+                - secret_key
+                - region
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+        '400':
+          description: Missing AWS credentials
+        '403':
+          description: Invalid or incomplete AWS credentials
+        '500':
+          description: Server error
+
+  /connect_postgres:
+    post:
+      summary: Connect to PostgreSQL and download tables as CSV
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                db_host:
+                  type: string
+                db_port:
+                  type: string
+                db_name:
+                  type: string
+                db_user:
+                  type: string
+                db_password:
+                  type: string
+              required:
+                - db_host
+                - db_port
+                - db_name
+                - db_user
+                - db_password
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  tables:
+                    type: array
+                    items:
+                      type: string
+        '400':
+          description: Missing PostgreSQL credentials
+        '500':
+          description: Server error
+
+  /download_csv:
+    get:
+      summary: Download output CSV file
+      responses:
+        '200':
+          description: Successful response
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
