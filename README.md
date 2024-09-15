@@ -44,6 +44,8 @@ We primarily deal with 4 types of files, which are Text Files (`.txt`, `.log`), 
 
 ### Sequence Diagram
 
+<img src="assets/img/sequence diagram.png" alt="sequence diagram">
+
 ### API Diagram
 
 ## Tech Stack
@@ -138,8 +140,7 @@ pip install -r requirements.txt
 >
 > For `pytesseract` refer <a href="https://tesseract-ocr.github.io/tessdoc/Installation.html">here</a>.
 >
-> Please replace the paths in `utils.py` with your paths.
->
+> Please replace the paths in `utils.py` with your paths.</i>
 
 Once all the above steps are completed, run the createdatabase.py script using the following command in the terminal in `server` directory:
 
