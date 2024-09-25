@@ -7,3 +7,4 @@ python-docx
 pytesseract
 torch
 transformers
+SpeechRecognition

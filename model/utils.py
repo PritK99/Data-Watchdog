@@ -1,11 +1,13 @@
 # This script handles the preprocessing of various file types.
 # Supported file types include .txt, .log, .pdf, .docx, .jpg, .png, .jpeg, .csv
 
+import os
 import cv2
 import PyPDF2
 import pytesseract  
 import numpy as np
 import pandas as pd
+import speech_recognition as sr
 from pdf2image import convert_from_path     
 from docx import Document
 
@@ -94,4 +96,45 @@ def process_csv(file_path):
     cell_values = df.values.flatten().astype(str)
     cell_values = [str(value) for value in cell_values if value != "nan"]
     content = ' | '.join(cell_values)
+    return content
+
+def process_video(file_path):
+    base_out_path = os.getcwd()[:-5]
+
+    temp_dir = os.path.join(base_out_path, "assets", "results")
+    os.makedirs(temp_dir, exist_ok=True)
+
+    temp_path = os.path.join(temp_dir, "temp.mp3")
+    out_path = os.path.join(temp_dir, "temp.wav")
+
+    convert_vid_to_aud = f"ffmpeg -y -i {file_path} {temp_path}"
+    convert_aud_to_wav = f"ffmpeg -y -i {temp_path} {out_path}"
+
+    os.system(convert_vid_to_aud)
+    os.system(convert_aud_to_wav)
+
+    r = sr.Recognizer()
+    with sr.AudioFile(out_path) as source:
+         audio = r.record(source, duration=120) 
+    content = r.recognize_google(audio)
+
+    os.remove(out_path)
+    os.remove(temp_path)
+    return content
+
+def process_audio(file_path):
+    base_out_path = os.getcwd()[:-5]
+
+    temp_dir = os.path.join(base_out_path, "assets", "results")
+    os.makedirs(temp_dir, exist_ok=True)
+    out_path = os.path.join(temp_dir, "temp.wav")
+
+    convert_vid_to_aud = f"ffmpeg -y -i {file_path} {out_path}"
+    os.system(convert_vid_to_aud)
+    r = sr.Recognizer()
+    with sr.AudioFile(out_path) as source:
+        audio = r.record(source, duration=120) 
+    content = r.recognize_google(audio)
+
+    os.remove(out_path)
     return content
