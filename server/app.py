@@ -39,6 +39,10 @@ def configure():
 def dashboard():
     return render_template('dashboard.html')
 
+@app.route('/view')
+def view():
+    return render_template('view.html')
+
 @app.route('/get_analysis')
 def get_analysis():
     analysis_json, pii_results_df = get_pii()
