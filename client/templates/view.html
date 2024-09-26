@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PII Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: white;
+        }
+
+        header {
+            background-color: #1c1c1c;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #333;
+            font-size: 1.8rem;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .filters {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        select, input {
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #555;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #333;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #1c1c1c;
+        }
+
+        footer {
+            background-color: #1c1c1c;
+            padding: 15px;
+            text-align: center;
+            color: #777;
+            border-top: 1px solid #333;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                font-size: 1.5rem;
+            }
+            .filters {
+                flex-direction: column;
+            }
+            .filters > * {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>PII Results</header>
+
+    <div class="container">
+        <div class="filters">
+            <select id="fileTypeFilter">
+                <option value="all">All File Types</option>
+            </select>
+            <select id="sortBy">
+                <option value="count">Sort by Count</option>
+                <option value="risk">Sort by Risk</option>
+            </select>
+            <input type="text" id="searchFile" placeholder="Search file...">
+            <!-- Add the download button -->
+            <button id="downloadBtn">Download PII Results</button>
+        </div>
+        <table id="piiResultsTable">
+            <thead>
+                <tr>
+                    <th>File Name</th>
+                    <th>PII Count</th>
+                    <th>Risk Score</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <footer>&copy; 2024 PII Detection System. All Rights Reserved.</footer>
+
+    <script>
+        let data = {}; // Initially empty; will be populated by the API
+
+        // Fetch data from the backend API
+        function fetchData() {
+            return fetch('/get_analysis')  // Replace with actual API URL
+                .then(response => response.json())
+                .then(fetchedData => {
+                    data = fetchedData;
+                    populateFileTypeFilter();
+                    updatePIIResultsTable();
+                })
+                .catch(error => {
+                    console.error("Error fetching data:", error);
+                    alert('Failed to fetch data from server.');
+                });
+        }
+
+        function populateFileTypeFilter() {
+            const select = document.getElementById('fileTypeFilter');
+            select.innerHTML = '<option value="all">All File Types</option>'; // Reset options
+
+            Object.keys(data.pii_counts_per_file_type).forEach(fileType => {
+                const option = document.createElement('option');
+                option.value = fileType;
+                option.textContent = fileType.toUpperCase();
+                select.appendChild(option);
+            });
+        }
+
+        function updatePIIResultsTable() {
+            const tbody = document.querySelector('#piiResultsTable tbody');
+            const fileTypeFilter = document.getElementById('fileTypeFilter').value;
+            const sortBy = document.getElementById('sortBy').value;
+            const searchTerm = document.getElementById('searchFile').value.toLowerCase();
+
+            let filteredData = Object.entries(data.pii_counts_per_file)
+                .filter(([fileName, _]) => {
+                    if (fileTypeFilter === 'all') return true;
+                    return fileName.endsWith(fileTypeFilter);
+                })
+                .filter(([fileName, _]) => fileName.toLowerCase().includes(searchTerm));
+
+            filteredData.sort((a, b) => {
+                if (sortBy === 'count') {
+                    return b[1] - a[1];
+                } else {
+                    return data.mean_risk_per_file[b[0]] - data.mean_risk_per_file[a[0]];
+                }
+            });
+
+            tbody.innerHTML = '';
+            filteredData.forEach(([fileName, count]) => {
+                const row = tbody.insertRow();
+                row.insertCell(0).textContent = fileName;
+                row.insertCell(1).textContent = count;
+                row.insertCell(2).textContent = data.mean_risk_per_file[fileName].toFixed(2);
+            });
+        }
+
+        // Add event listener to download button
+        function setupDownloadButton() {
+            const downloadButton = document.getElementById('downloadBtn');
+            downloadButton.addEventListener('click', () => {
+                window.location.href = '/download_csv';  // Replace with the correct download URL
+            });
+        }
+
+        function initializePage() {
+            fetchData();
+            setupDownloadButton();
+
+            document.getElementById('fileTypeFilter').addEventListener('change', updatePIIResultsTable);
+            document.getElementById('sortBy').addEventListener('change', updatePIIResultsTable);
+            document.getElementById('searchFile').addEventListener('input', updatePIIResultsTable);
+        }
+
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
+</body>
+</html>
