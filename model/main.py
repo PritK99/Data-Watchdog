@@ -69,9 +69,9 @@ def get_pii():
             pii_result = detect_pii_from_csv(file)
 
         # Process video files
-        elif file.endswith(".mp4"):
-            content = process_video(file)
-            pii_result = detect_pii_from_string(content)
+        # elif file.endswith(".mp4"):
+        #     content = process_video(file)
+        #     pii_result = detect_pii_from_string(content)
         
         # Process audio files
         elif file.endswith(".mp3"):

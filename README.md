@@ -16,7 +16,7 @@
 
 ## About The Project
 
-Data Watchdog is a tool built to find and classify Personally Identifiable Information (PII) like names, emails, Aadhaar numbers, and PAN numbers in different types of data storage. It works with databases like MySQL and cloud services like Google Cloud and Amazon S3. The tool supports various file types, including unstructured files (such as `.txt`, `.log`, `.jpg`, `.pdf`) and structured files (such as `.csv`). 
+Data Watchdog is a tool built to find and classify Personally Identifiable Information (PII) like names, emails, Aadhaar numbers, and PAN numbers in different types of data storage. It works with databases like MySQL and cloud services like Google Cloud and Amazon S3. The tool supports various file types, including unstructured files (such as `.txt`, `.log`, `.jpg`, `.pdf`, `.mp3`, `.mp4`) and structured files (such as `.csv`). 
 
 **Objective**: Storing personal data comes with risks, and businesses need to follow rules to protect it. Data Watchdog helps companies find and classify personal data in their systems, making sure they follow data privacy laws like GDPR and CCPA, and reduce the risk of data breaches.
 
@@ -36,7 +36,7 @@ https://github.com/user-attachments/assets/597ad48b-8e24-47e1-8d08-26b8420f3aae
 
 ## Methodology
 
-We primarily deal with 4 types of files, which are Text Files (`.txt`, `.log`), Image Files (`.png`, `.jpg`, `.jpeg`), PDF Files (`.pdf`) and CSV Files (`.csv`). Details about each PII extraction process can be found <a href="model/README.md">here</a>
+We primarily deal with 5 types of files, which are Text Files (`.txt`, `.log`), Image Files (`.png`, `.jpg`, `.jpeg`), PDF Files (`.pdf`), CSV Files (`.csv`) and Multimedia Files (`.mp3` and `.mp4`). Details about each PII extraction process can be found <a href="model/README.md">here</a>
 
 ### High Level Design
 
@@ -135,6 +135,7 @@ pip install -r requirements.txt
 ```
 
 > **Note** <br>
+>
 > <i>Path to `poppler` and `pytesseract` are required in `utils.py` to perform pdf to image conversion and OCR respectively.
 >
 > For `poppler` refer <a href="https://github.com/oschwartz10612/poppler-windows/releases/tag/v24.07.0-0">here</a>.
@@ -142,6 +143,8 @@ pip install -r requirements.txt
 > For `pytesseract` refer <a href="https://tesseract-ocr.github.io/tessdoc/Installation.html">here</a>.
 >
 > Please replace the paths in `utils.py` with your paths.</i>
+>
+> In addition to this, we require `ffmpeg` to deal with multimedia files such as audio and video. For the installation, please refer this <a href="https://www.youtube.com/watch?v=JR36oH35Fgg">YouTube video</a>
 
 Once all the above steps are completed, run the createdatabase.py script using the following command in the terminal in `server` directory:
 

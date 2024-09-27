@@ -5,6 +5,7 @@ import os
 import cv2
 import PyPDF2
 import pytesseract  
+import subprocess
 import numpy as np
 import pandas as pd
 import speech_recognition as sr
@@ -99,42 +100,65 @@ def process_csv(file_path):
     return content
 
 def process_video(file_path):
-    base_out_path = os.getcwd()[:-5]
+    """
+    Processes video files by extracting image frames and audio layers.
 
-    temp_dir = os.path.join(base_out_path, "assets", "results")
-    os.makedirs(temp_dir, exist_ok=True)
+    input: file path (string)
+    output: extracted audio and images from the video as a string
+    """
+    in_file = os.path.join(os.getcwd(), file_path[10:])
 
-    temp_path = os.path.join(temp_dir, "temp.mp3")
-    out_path = os.path.join(temp_dir, "temp.wav")
-
-    convert_vid_to_aud = f"ffmpeg -y -i {file_path} {temp_path}"
-    convert_aud_to_wav = f"ffmpeg -y -i {temp_path} {out_path}"
-
+    # Extract audio from video
+    convert_vid_to_aud = f"ffmpeg -y -i {in_file} temp_audio_for_video.wav"
     os.system(convert_vid_to_aud)
-    os.system(convert_aud_to_wav)
 
     r = sr.Recognizer()
-    with sr.AudioFile(out_path) as source:
-         audio = r.record(source, duration=120) 
-    content = r.recognize_google(audio)
+    with sr.AudioFile("temp_audio_for_video.wav") as source:
+        audio = r.record(source, duration=120)
+    audio_content = r.recognize_google(audio)
 
-    os.remove(out_path)
-    os.remove(temp_path)
+    # Extract frames from video
+    video_capture = cv2.VideoCapture(file_path)
+    frame_count = int(video_capture.get(cv2.CAP_PROP_FRAME_COUNT))
+    frame_interval = max(frame_count // 10, 1)
+
+    content = audio_content + " | "
+
+    for i in range(0, frame_count, frame_interval):
+        video_capture.set(cv2.CAP_PROP_POS_FRAMES, i)
+        success, frame = video_capture.read()
+        if not success:
+            break
+
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        _, thresh = cv2.threshold(gray, 150, 255, cv2.THRESH_BINARY_INV)
+        denoised = cv2.medianBlur(thresh, 3)
+        rescaled_img = cv2.resize(denoised, None, fx=2, fy=2, interpolation=cv2.INTER_LINEAR)
+        kernel = np.ones((2, 2), np.uint8)
+        dilated = cv2.dilate(rescaled_img, kernel, iterations=1)
+        
+        frame_content = pytesseract.image_to_string(dilated)
+        content += frame_content + " | "
+
+    video_capture.release()
     return content
 
 def process_audio(file_path):
-    base_out_path = os.getcwd()[:-5]
+    """
+    Processes audio files by extracting speech
 
-    temp_dir = os.path.join(base_out_path, "assets", "results")
-    os.makedirs(temp_dir, exist_ok=True)
-    out_path = os.path.join(temp_dir, "temp.wav")
+    input: file path (string)
+    output: extracted speech from the audio as a string
+    """
+    in_file = os.path.join(os.getcwd(), file_path[10:])
+    convert_aud_to_aud = f"ffmpeg -y -i {in_file} temp_audio_for_audio.wav"
+    os.system(convert_aud_to_aud)
 
-    convert_vid_to_aud = f"ffmpeg -y -i {file_path} {out_path}"
-    os.system(convert_vid_to_aud)
     r = sr.Recognizer()
-    with sr.AudioFile(out_path) as source:
-        audio = r.record(source, duration=120) 
-    content = r.recognize_google(audio)
+    with sr.AudioFile("temp_audio_for_audio.wav") as source:
+        audio = r.record(source)
+    content = r.recognize_google(audio, language = 'en-IN')
 
-    os.remove(out_path)
+    print(content)
+
     return content
