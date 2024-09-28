@@ -16,7 +16,7 @@
 
 ## About The Project
 
-Data Watchdog is a tool built to find and classify Personally Identifiable Information (PII) like names, emails, Aadhaar numbers, and PAN numbers in different types of data storage. It works with databases like MySQL and cloud services like Google Cloud and Amazon S3. The tool supports various file types, including unstructured files (such as `.txt`, `.log`, `.jpg`, `.pdf`, `.mp3`, `.mp4`) and structured files (such as `.csv`). 
+Data Watchdog is a tool built to find and classify Personally Identifiable Information (PII) like names, emails, Aadhaar numbers, and PAN numbers in different types of data storage. It works with databases like MySQL and cloud services like Google Cloud and Amazon S3. The tool supports various file types, including unstructured files (such as `.txt`, `.log`, `.jpg`, `.png`, `.jpeg`, `.pdf`, `.mp3`, `.mp4`) and structured files (such as `.csv`). 
 
 **Objective**: Storing personal data comes with risks, and businesses need to follow rules to protect it. Data Watchdog helps companies find and classify personal data in their systems, making sure they follow data privacy laws like GDPR and CCPA, and reduce the risk of data breaches.
 
@@ -36,7 +36,7 @@ https://github.com/user-attachments/assets/597ad48b-8e24-47e1-8d08-26b8420f3aae
 
 ## Methodology
 
-We primarily deal with 5 types of files, which are Text Files (`.txt`, `.log`), Image Files (`.png`, `.jpg`, `.jpeg`), PDF Files (`.pdf`), CSV Files (`.csv`) and Multimedia Files (`.mp3` and `.mp4`). Details about each PII extraction process can be found <a href="model/README.md">here</a>
+We primarily deal with 6 types of files, which are Text Files (`.txt`, `.log`), Image Files (`.png`, `.jpg`, `.jpeg`), PDF Files (`.pdf`), CSV Files (`.csv`), Audio Files (`.mp3`) and Video Files(`.mp4`). Details about each PII extraction process can be found <a href="model/README.md">here</a>
 
 ### High Level Design
 
