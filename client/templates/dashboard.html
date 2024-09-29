@@ -118,10 +118,10 @@
       <div class="dashboard" style="display: none">
         <div class="card">
           <h2>Overview</h2>
-          <p>Total Risks: <span id="totalRisks"></span></p>
-          <p>Mean Risk Score: <span id="meanRiskScore"></span> / 10 </p>
+          <p><b>Total Risks: <span id="totalRisks"></span></b></p>
+          <p><b>Mean Risk Score: <span id="meanRiskScore"></span> / 10 </b></p>
           <!-- Download Button for CSV file -->
-          <a href="/download_csv" class="download-btn" download>Download Results</a>
+          <button class="download-btn" id="view-btn">View Results</button>
         </div>
         <div class="card">
           <h2>Bucket Distribution</h2>
@@ -410,6 +410,9 @@
       }
 
       document.addEventListener("DOMContentLoaded", initializeDashboard);
+      document.getElementById("view-btn").onclick = function() {
+            window.location.href = "/view";
+        };
     </script>
   </body>
 </html>

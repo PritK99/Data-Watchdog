@@ -7,6 +7,8 @@ import pandas as pd
 import json
 from sqlalchemy import create_engine, inspect
 from botocore.client import Config
+import csv
+from collections import defaultdict
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
@@ -38,6 +40,10 @@ def configure():
 @app.route('/dashboard')
 def dashboard():
     return render_template('dashboard.html')
+
+@app.route('/view')
+def view():
+    return render_template('view.html')
 
 @app.route('/get_analysis')
 def get_analysis():
@@ -138,6 +144,58 @@ def download_csv():
     path = path[0:-7]
     path += r"\assets\results\output.csv"
     return send_file(path, as_attachment=True)
+
+@app.route('/get_results', methods=['GET'])
+def get_results():
+    analysis = read_csv_data()
+    return jsonify(analysis)
+
+# Function to read the CSV and build the data structure
+def read_csv_data():
+    pii_data = {
+        "pii_counts_per_file": defaultdict(int),  # {'file_name': pii_count}
+        "risk_per_file": defaultdict(float),  # {'file_name': risk_sum}
+        "mean_risk_per_file": {},  # {'file_name': mean_risk}
+        "categories_per_file": defaultdict(lambda: defaultdict(lambda: defaultdict(int)))  # {'file_name': {'category': {'sub_category': pii_count}}}
+    }
+    
+    # Reading the CSV file
+    path = os.getcwd()
+    path = path[0:-7]
+    path += r"\assets\results\output.csv"
+    with open(path, 'r') as csvfile:  # Replace with your file path
+        reader = csv.DictReader(csvfile)
+        
+        for row in reader:
+            file_name = row['file name']
+            category = row['category']
+            bucket = row['bucket']
+            risk = row['risk']
+            # file_extension = row['file extension']
+            # risk_category = row['risk_category']
+            
+            # Parse risk as float (or skip if it's empty)
+            if risk:
+                risk = float(risk)
+            else:
+                risk = 0
+
+            # Increment PII count for each file
+            pii_data["pii_counts_per_file"][file_name] += 1
+            
+            # Add risk to the total risk for the file
+            pii_data["risk_per_file"][file_name] += risk
+
+            # Add category and subcategory PII count for each file
+            pii_data["categories_per_file"][file_name][bucket][category] += 1
+
+    # Calculate mean risk per file
+    for file_name in pii_data["pii_counts_per_file"]:
+        pii_count = pii_data["pii_counts_per_file"][file_name]
+        total_risk = pii_data["risk_per_file"][file_name]
+        pii_data["mean_risk_per_file"][file_name] = total_risk / pii_count if pii_count > 0 else 0
+
+    return pii_data
 
 if __name__ == '__main__':
     app.run(debug=True)
