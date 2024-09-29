@@ -15,7 +15,7 @@ bucket_dict = {
     'id':'Personal',
     'location': 'Personal',
     'medical': 'Medical',
-    'name': 'name',
+    'name': 'Personal',
     'organization': 'Miscellaneous',
     'pan': 'Financial',
     'passport': 'Personal',
@@ -66,7 +66,7 @@ def assign_bucket_and_risk(pii_result: list):
     processed_pii_results = []
     for pii in pii_result:
         category = pii[1]  
-        bucket = bucket_dict.get(category, 'Unknown')  # Get bucket type using bucket_dict, default to 'Unknown'
+        bucket = bucket_dict.get(category, 'Miscellaneous')  # Get bucket type using bucket_dict, default to miscellaneous
         risk = risk_dict.get(category, pd.NA)  # Get risk score using risk_dict, default to pandas NA
         pii.append(bucket) 
         pii.append(risk)  
