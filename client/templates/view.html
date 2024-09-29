@@ -57,6 +57,7 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            background-color: #1c1c1c;
         }
 
         th, td {
@@ -67,6 +68,25 @@
 
         th {
             background-color: #1c1c1c;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #2b2b2b;
+        }
+
+        tr:hover {
+            background-color: #333;
+        }
+
+        .file-name {
+            cursor: pointer;
+            color: #ffff;
+            text-decoration: none;
+        }
+
+        .file-name:hover {
+            color: #0056b3;
         }
 
         footer {
@@ -93,7 +113,6 @@
 </head>
 <body>
     <header>PII Results</header>
-
     <div class="container">
         <div class="filters">
             <select id="fileTypeFilter">
@@ -101,10 +120,9 @@
             </select>
             <select id="sortBy">
                 <option value="count">Sort by Count</option>
-                <option value="risk">Sort by Risk</option>
+                <option value="risk">Sort by Mean Risk</option>
             </select>
             <input type="text" id="searchFile" placeholder="Search file...">
-            <!-- Add the download button -->
             <button id="downloadBtn">Download PII Results</button>
         </div>
         <table id="piiResultsTable">
@@ -113,12 +131,26 @@
                     <th>File Name</th>
                     <th>PII Count</th>
                     <th>Risk Score</th>
+                    <th>Mean Risk</th>
                 </tr>
             </thead>
             <tbody></tbody>
         </table>
+        <div id="details" style="display:none;">
+            <h2>File Details</h2>
+            <p id="fileName"></p>
+            <table id="categoryTable">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Sub-Category</th>
+                        <th>PII Count</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
-
     <footer>&copy; 2024 PII Detection System. All Rights Reserved.</footer>
 
     <script>
@@ -126,7 +158,7 @@
 
         // Fetch data from the backend API
         function fetchData() {
-            return fetch('/get_analysis')  // Replace with actual API URL
+            return fetch('/get_results')
                 .then(response => response.json())
                 .then(fetchedData => {
                     data = fetchedData;
@@ -141,62 +173,103 @@
 
         function populateFileTypeFilter() {
             const select = document.getElementById('fileTypeFilter');
-            select.innerHTML = '<option value="all">All File Types</option>'; // Reset options
+            select.innerHTML = '<option value="all">All File Types</option>';  // Reset options to include the default "All"
 
-            Object.keys(data.pii_counts_per_file_type).forEach(fileType => {
+            // We assume that each file name has a type (extension) like '.csv', '.txt', etc.
+            const fileTypes = new Set();  // Use a Set to avoid duplicates
+
+            // Loop through the data and extract file types
+            Object.keys(data.pii_counts_per_file).forEach(fileName => {
+                const fileType = fileName.split('.').pop();  // Get the file extension (e.g., 'csv', 'txt')
+                fileTypes.add(fileType);  // Add the file type to the Set
+            });
+
+            // Populate the select dropdown with the unique file types
+            fileTypes.forEach(fileType => {
                 const option = document.createElement('option');
                 option.value = fileType;
-                option.textContent = fileType.toUpperCase();
+                option.textContent = fileType.toUpperCase();  // Display file types in uppercase
                 select.appendChild(option);
             });
+
+            // Add an event listener to trigger table update when the filter changes
+            select.addEventListener('change', updatePIIResultsTable);
         }
 
         function updatePIIResultsTable() {
-            const tbody = document.querySelector('#piiResultsTable tbody');
-            const fileTypeFilter = document.getElementById('fileTypeFilter').value;
-            const sortBy = document.getElementById('sortBy').value;
-            const searchTerm = document.getElementById('searchFile').value.toLowerCase();
+        const tbody = document.querySelector('#piiResultsTable tbody');
+        const sortBy = document.getElementById('sortBy').value;
+        const fileTypeFilter = document.getElementById('fileTypeFilter').value;
+        const searchTerm = document.getElementById('searchFile').value.toLowerCase();
 
-            let filteredData = Object.entries(data.pii_counts_per_file)
-                .filter(([fileName, _]) => {
-                    if (fileTypeFilter === 'all') return true;
-                    return fileName.endsWith(fileTypeFilter);
-                })
-                .filter(([fileName, _]) => fileName.toLowerCase().includes(searchTerm));
+        // Filter data based on the search term and file type
+        let filteredData = Object.entries(data.pii_counts_per_file)
+            .filter(([fileName, _]) => fileName.toLowerCase().includes(searchTerm));
 
-            filteredData.sort((a, b) => {
-                if (sortBy === 'count') {
-                    return b[1] - a[1];
-                } else {
-                    return data.mean_risk_per_file[b[0]] - data.mean_risk_per_file[a[0]];
-                }
-            });
-
-            tbody.innerHTML = '';
-            filteredData.forEach(([fileName, count]) => {
-                const row = tbody.insertRow();
-                row.insertCell(0).textContent = fileName;
-                row.insertCell(1).textContent = count;
-                row.insertCell(2).textContent = data.mean_risk_per_file[fileName].toFixed(2);
-            });
+        if (fileTypeFilter !== 'all') {
+            filteredData = filteredData.filter(([fileName, _]) => fileName.endsWith(fileTypeFilter));
         }
 
-        // Add event listener to download button
-        function setupDownloadButton() {
-            const downloadButton = document.getElementById('downloadBtn');
-            downloadButton.addEventListener('click', () => {
-                window.location.href = '/download_csv';  // Replace with the correct download URL
+        // Sort the data based on the selected criteria
+        if (sortBy === 'count') {
+            filteredData.sort((a, b) => b[1] - a[1]);  // Sort by PII Count
+        } else if (sortBy === 'risk') {
+            filteredData.sort((a, b) => data.mean_risk_per_file[b[0]] - data.mean_risk_per_file[a[0]]);  // Sort by Risk
+        }
+
+        // Clear existing table rows
+        tbody.innerHTML = '';
+
+        // Populate the table with sorted and filtered data
+        filteredData.forEach(([fileName, piiCount]) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="file-name">${fileName}</td>
+                <td>${piiCount}</td>
+                <td>${data.risk_per_file[fileName]}</td>
+                <td>${data.mean_risk_per_file[fileName].toFixed(2)}</td>
+            `;
+            row.querySelector('.file-name').addEventListener('click', () => showFileDetails(fileName));
+            tbody.appendChild(row);
+        });
+    }
+
+        function showFileDetails(fileName) {
+            const detailsDiv = document.getElementById('details');
+            const categoryTableBody = document.querySelector('#categoryTable tbody');
+            categoryTableBody.innerHTML = '';  // Clear existing rows
+
+            document.getElementById('fileName').textContent = `File: ${fileName}`;
+            detailsDiv.style.display = 'block';  // Show details section
+
+            const categories = data.categories_per_file[fileName];
+            Object.entries(categories).forEach(([category, subCategories]) => {
+                Object.entries(subCategories).forEach(([subCategory, count]) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${category}</td>
+                        <td>${subCategory}</td>
+                        <td>${count}</td>
+                    `;
+                    categoryTableBody.appendChild(row);
+                });
             });
         }
 
         function initializePage() {
             fetchData();
-            setupDownloadButton();
-
-            document.getElementById('fileTypeFilter').addEventListener('change', updatePIIResultsTable);
+            document.getElementById('downloadBtn').addEventListener('click', () => {
+                window.location.href = '/download_csv';
+            });
             document.getElementById('sortBy').addEventListener('change', updatePIIResultsTable);
+            document.getElementById('fileTypeFilter').addEventListener('change', updatePIIResultsTable);
             document.getElementById('searchFile').addEventListener('input', updatePIIResultsTable);
         }
+        document.querySelectorAll('.file-name').forEach(item => {
+            item.addEventListener('click', () => {
+                console.log('File clicked:', item.textContent);
+            });
+        });
 
         document.addEventListener('DOMContentLoaded', initializePage);
     </script>
