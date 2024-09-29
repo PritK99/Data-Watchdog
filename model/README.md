@@ -2,6 +2,10 @@
 
 ## Methodology
 
+We convert every file format to string and/or csv file. For example, a video file can be divided into image frames, and audio can be extracted from this video. Now, this audio and image can be converted to string. The implementation for the same is available in `detect.py` and `utils.py`.
+
+<img src="../assets/img/flowchart.png" alt="flowchart">
+
 1) **PII Detection from Strings**
 
     I) Regular Expressions (REGEX):

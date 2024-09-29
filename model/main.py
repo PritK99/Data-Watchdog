@@ -7,7 +7,7 @@ parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
 
 from .detect import detect_pii_from_string, detect_pii_from_csv
-from .utils import process_txt_or_log, process_pdf, process_docx, process_image
+from .utils import process_txt_or_log, process_pdf, process_docx, process_image, process_video, process_audio
 from .postprocess import assign_bucket_and_risk, convert_to_csv
 from .analytics import analyze
 
@@ -67,6 +67,16 @@ def get_pii():
         # Process CSV files
         elif file.endswith(".csv"):
             pii_result = detect_pii_from_csv(file)
+
+        # Process video files
+        # elif file.endswith(".mp4"):
+        #     content = process_video(file)
+        #     pii_result = detect_pii_from_string(content)
+        
+        # Process audio files
+        elif file.endswith(".mp3"):
+            content = process_audio(file)
+            pii_result = detect_pii_from_string(content)
 
         # Handle unknown file types
         else:

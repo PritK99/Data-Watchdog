@@ -1,6 +1,10 @@
 # venv
 /data-watchdog
 
+# Temporary audio files
+server/temp_audio_for_audio.wav
+server/temp_audio_for_video.wav
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
