@@ -69,9 +69,9 @@ def get_pii():
             pii_result = detect_pii_from_csv(file)
 
         # Process video files
-        # elif file.endswith(".mp4"):
-        #     content = process_video(file)
-        #     pii_result = detect_pii_from_string(content)
+        elif file.endswith(".mp4"):
+            content = process_video(file)
+            pii_result = detect_pii_from_string(content)
         
         # Process audio files
         elif file.endswith(".mp3"):
@@ -84,7 +84,11 @@ def get_pii():
             continue
 
         # Log the PII detection result for each file
+        # if not file.endswith(".csv"):
+        #     logging.info(f"Detected Content for {file}: {content}")
+        
         logging.info(f"PII detection result for {file}: {pii_result}")
+
         processed_pii_result = assign_bucket_and_risk(pii_result)
         final_result = [file, processed_pii_result]
         global_pii_results.append(final_result)
