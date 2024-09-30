@@ -13,3 +13,4 @@ sqlalchemy
 torch
 transformers
 SpeechRecognition
+apscheduler

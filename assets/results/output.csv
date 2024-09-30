@@ -13,16 +13,12 @@ fot_data.csv,LMNOP3456Q,pan,Financial,8,csv
 fot_data.csv,WXYZA9012B,pan,Financial,8,csv
 fot_data.csv,9876543210,ration card,Personal,8,csv
 fot_data.csv,9090909090,ration card,Personal,8,csv
-fot_data.csv,Rohan Sharma,name,Personal,6,csv
 fot_data.csv,Mahim Junction,location,Personal,6,csv
-fot_data.csv,Priya Desai,name,Personal,6,csv
 fot_data.csv,Mayurbagh,name,Personal,6,csv
-fot_data.csv,Albert Einstein,name,Personal,6,csv
 fot_data.csv,L,organization,Miscellaneous,3,csv
 fot_data.csv,Ulm,location,Personal,6,csv
 fot_data.csv,Newton,location,Personal,6,csv
 fot_data.csv,Scotland,location,Personal,6,csv
-fot_data.csv,Jerome K Jerome,name,Personal,6,csv
 fot_data.csv,Mississippi,location,Personal,6,csv
 mastercard.jpg,9412 7512 3412,aadhar,Personal,9,jpg
 mastercard.jpg,9412 7512 3412 3456,creditcard,Financial,10,jpg
@@ -39,7 +35,6 @@ my_personal_diary.txt,919999999999,ration card,Personal,8,txt
 my_personal_diary.txt,Jelum Towers,location,Personal,6,txt
 my_personal_diary.txt,Vice City,location,Personal,6,txt
 my_personal_diary.txt,Sonny,name,Personal,6,txt
-my_personal_diary.txt,Vice City,location,Personal,6,txt
 my_personal_diary.txt,Malibu,organization,Miscellaneous,3,txt
 my_personal_diary.txt,Club,location,Personal,6,txt
 my_personal_diary.txt,Lance Vance,name,Personal,6,txt

@@ -112,4 +112,6 @@ def convert_to_csv(global_pii_results: list):
         "risk": risks
     })
 
+    df = df.drop_duplicates()
+
     return df

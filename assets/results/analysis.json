@@ -1,14 +1,14 @@
 {
-    "total_risks": 60,
-    "mean_risk_score": 6.6,
+    "total_risks": 55,
+    "mean_risk_score": 6.66,
     "bucket distribution": {
-        "Personal": 43,
+        "Personal": 38,
         "Financial": 10,
         "Miscellaneous": 7
     },
     "pii_counts_per_file": {
-        "fot_data.csv": 25,
-        "my_personal_diary.txt": 17,
+        "fot_data.csv": 21,
+        "my_personal_diary.txt": 16,
         "news.mp4": 6,
         "wedding-invite.pdf": 4,
         "twitter_ss.jpg": 4,
@@ -16,25 +16,25 @@
         "sample-response.mp3": 1
     },
     "pii_counts_per_file_type": {
-        "csv": 25,
-        "txt": 17,
+        "csv": 21,
+        "txt": 16,
         "jpg": 7,
         "mp4": 6,
         "pdf": 4,
         "mp3": 1
     },
     "mean_risk_per_file_type": {
-        "csv": 6.6,
+        "csv": 6.71,
         "jpg": 8.71,
         "mp3": 6.0,
         "mp4": 5.25,
         "pdf": 5.25,
-        "txt": 6.41
+        "txt": 6.44
     },
     "mean_risk_per_file": {
-        "fot_data.csv": 6.6,
+        "fot_data.csv": 6.71,
         "mastercard.jpg": 8.33,
-        "my_personal_diary.txt": 6.41,
+        "my_personal_diary.txt": 6.44,
         "news.mp4": 5.25,
         "sample-response.mp3": 6.0,
         "twitter_ss.jpg": 9.0,
@@ -42,12 +42,12 @@
     },
     "risk_distribution": {
         "low": 8,
-        "medium": 39,
+        "medium": 34,
         "high": 11
     },
     "top_categories": {
-        "name": 18,
-        "location": 12,
+        "name": 14,
+        "location": 11,
         "organization": 5,
         "aadhar": 4,
         "cvv": 4
