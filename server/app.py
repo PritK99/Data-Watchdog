@@ -9,12 +9,14 @@ from sqlalchemy import create_engine, inspect
 from botocore.client import Config
 import csv
 from collections import defaultdict
+from apscheduler.schedulers.background import BackgroundScheduler
+
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
-
 from model.main import get_pii
+
 
 # Define paths to templates and static folders
 templates_folder = os.path.join(current_dir, '..', 'client', 'templates')
@@ -24,6 +26,15 @@ app = Flask(__name__, template_folder=templates_folder, static_folder=static_fol
 
 # Path where files will be downloaded
 download_dir = os.getcwd() + '\downloads'
+
+# Initialize the scheduler
+scheduler = BackgroundScheduler()
+
+# Memory-based storage for credentials (can be replaced with DB)
+credentials = {
+    "aws": None,
+    "postgres": None
+}
 
 # Ensure the directory exists
 if not os.path.exists(download_dir):
@@ -58,6 +69,46 @@ def get_files():
     access_key = data.get('access_key')
     secret_key = data.get('secret_key')
     region = data.get('region')
+    if not access_key or not secret_key or not region:
+        return jsonify({"success": False, "message": "Missing AWS credentials"}), 400
+    print("Fetching files from S3...")
+    
+    # Store AWS credentials in memory
+    credentials['aws'] = {
+        "access_key": access_key,
+        "secret_key": secret_key,
+        "region": region
+    }
+    return fetch_s3_files()
+    # return jsonify({"success": True, "message": "AWS credentials stored successfully and files fetched."})
+
+    
+
+
+# AWS S3 Data Fetch Function
+def fetch_s3_files():
+    print("Fetching files from S3...")
+    
+    # Retrieve stored credentials
+    aws_creds = credentials.get("aws")
+    
+    if not aws_creds:
+        print("AWS credentials not set.")
+        return
+
+    access_key = aws_creds['access_key']
+    secret_key = aws_creds['secret_key']
+    region = aws_creds['region']
+    # Retrieve stored credentials
+    aws_creds = credentials.get("aws")
+    
+    if not aws_creds:
+        print("AWS credentials not set.")
+        return
+
+    access_key = aws_creds['access_key']
+    secret_key = aws_creds['secret_key']
+    region = aws_creds['region']
 
     if not access_key or not secret_key or not region:
         return jsonify({"success": False, "message": "Missing AWS credentials"}), 400
@@ -90,6 +141,8 @@ def get_files():
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
 
+
+
 # PostgreSQL Connection Endpoint
 @app.route('/connect_postgres', methods=['POST'])
 def connect_postgres():
@@ -102,6 +155,34 @@ def connect_postgres():
 
     if not all([db_host, db_port, db_name, db_user, db_password]):
         return jsonify({"success": False, "message": "Missing PostgreSQL credentials"}), 400
+
+    credentials['postgres'] = {
+        "db_host": db_host,
+        "db_port": db_port,
+        "db_name": db_name,
+        "db_user": db_user,
+        "db_password": db_password
+    }
+
+    return fetch_postgres_data()
+    
+
+def fetch_postgres_data():
+    print("Fetching data from PostgreSQL...")
+    
+    # Retrieve stored credentials
+    postgres_creds = credentials.get("postgres")
+    
+    if not postgres_creds:
+        print("PostgreSQL credentials not set.")
+        return
+    
+
+    db_host = postgres_creds['db_host']
+    db_port = postgres_creds['db_port']
+    db_name = postgres_creds['db_name']
+    db_user = postgres_creds['db_user']
+    db_password = postgres_creds['db_password']
 
     try:
         # Connect to PostgreSQL
@@ -123,12 +204,12 @@ def connect_postgres():
             csv_file_path = os.path.join(download_dir, f'{table_name}.csv')
             
             # Check if the CSV file already exists
-            if os.path.exists(csv_file_path):
-                print(f"CSV file for table {table_name} already exists at {csv_file_path}. Skipping...")
-            else:
+            # if os.path.exists(csv_file_path):
+            #     print(f"CSV file for table {table_name} already exists at {csv_file_path}. Skipping...")
+            # else:
                 # Save DataFrame to CSV with the table name as the file name
-                df.to_csv(csv_file_path, index=False)
-                print(f"Table {table_name} has been written to {csv_file_path}")
+            df.to_csv(csv_file_path, index=False)
+            print(f"Table {table_name} has been written to {csv_file_path}")
 
         # Close the database connection
         engine.dispose()
@@ -137,6 +218,13 @@ def connect_postgres():
 
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
+    
+# Schedule the functions to run every 30 minutes
+scheduler.add_job(func=fetch_s3_files, trigger="interval", minutes=2)
+scheduler.add_job(func=fetch_postgres_data, trigger="interval", minutes=2)
+# Start the scheduler
+scheduler.start()
+
 
 @app.route('/download_csv', methods=['GET'])
 def download_csv():
@@ -147,6 +235,7 @@ def download_csv():
 
 @app.route('/get_results', methods=['GET'])
 def get_results():
+    analysis_json, pii_results_df = get_pii()
     analysis = read_csv_data()
     return jsonify(analysis)
 

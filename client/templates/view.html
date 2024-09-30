@@ -258,6 +258,8 @@
 
         function initializePage() {
             fetchData();
+            // Poll the backend every 2 minutes (120,000 milliseconds)
+            setInterval(fetchData, 120000);  // This will call fetchData every 2 minutes
             document.getElementById('downloadBtn').addEventListener('click', () => {
                 window.location.href = '/download_csv';
             });
