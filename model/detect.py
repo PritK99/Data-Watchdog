@@ -22,9 +22,8 @@ pii_patterns = {
     "ip": r'\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b',
     "pan": r'\b[A-Z]{5}\d{4}[A-Z]\b',
     "creditcard": r'(?:\d[ -]*?){13,16}',
-    "bank_account": r'\b\d{9,18}\b',
+    "bank_account": r'\b\d{11,18}\b',
     "cvv": r'\b\d{3}\b',
-    "tin": r'\b[A-Z]{5}\d{4}[A-Z]\b',
     "ration card": r'\b\d{9,16}\b',
 }
 
