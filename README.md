@@ -1,6 +1,8 @@
 # Data Watchdog
 
-<img src="assets/img/logo.png" alt="logo page">
+<div align="center">
+    <img src="assets/img/logo.png" alt="logo page">
+</div>
 
 ## Table of Contents
 
