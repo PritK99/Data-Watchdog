@@ -1,14 +1,19 @@
 openapi: 3.0.0
 info:
-  title: Flask Application API
+  title: Flask PII Analysis API
   version: 1.0.0
+  description: API for PII analysis and data management
+
+servers:
+  - url: http://localhost:5000
+
 paths:
   /:
     get:
-      summary: Home page
+      summary: Home Page
       responses:
         '200':
-          description: Successful response
+          description: HTML content of home page
           content:
             text/html:
               schema:
@@ -16,10 +21,10 @@ paths:
 
   /configure:
     get:
-      summary: Configuration page
+      summary: Configure Page
       responses:
         '200':
-          description: Successful response
+          description: HTML content of configure page
           content:
             text/html:
               schema:
@@ -27,10 +32,21 @@ paths:
 
   /dashboard:
     get:
-      summary: Dashboard page
+      summary: Dashboard Page
       responses:
         '200':
-          description: Successful response
+          description: HTML content of dashboard page
+          content:
+            text/html:
+              schema:
+                type: string
+
+  /view:
+    get:
+      summary: View Page
+      responses:
+        '200':
+          description: HTML content of view page
           content:
             text/html:
               schema:
@@ -38,74 +54,18 @@ paths:
 
   /get_analysis:
     get:
-      summary: Get PII analysis from model
+      summary: Get PII Analysis Results
       responses:
         '200':
-          description: Successful response
+          description: JSON containing analysis results
           content:
             application/json:
               schema:
                 type: object
-                properties:
-                  total_risks:
-                    type: integer
-                  mean_risk_score:
-                    type: number
-                    format: float
-                  bucket_distribution:
-                    type: object
-                    additionalProperties:
-                      type: integer
-                  pii_counts_per_file:
-                    type: object
-                    additionalProperties:
-                      type: integer
-                    example:
-                      "file1.csv": 79
-                      "file2.csv": 5
-                  pii_counts_per_file_type:
-                    type: object
-                    additionalProperties:
-                      type: integer
-                    example:
-                      "csv": 89
-                      "txt": 10
-                  mean_risk_per_file_type:
-                    type: object
-                    additionalProperties:
-                      type: number
-                      format: float
-                    example:
-                      "csv": 4.97
-                      "txt": 3.5
-                  mean_risk_per_file:
-                    type: object
-                    additionalProperties:
-                      type: number
-                      format: float
-                    example:
-                      "file1.csv": 5.0
-                      "file2.csv": 3.0
-                  risk_distribution:
-                    type: object
-                    properties:
-                      low:
-                        type: integer
-                      medium:
-                        type: integer
-                      high:
-                        type: integer
-                  top_categories:
-                    type: object
-                    additionalProperties:
-                      type: integer
-                    example:
-                      "id": 84
-                      "miscellaneous": 2
 
   /get_files:
     post:
-      summary: Download files from AWS S3
+      summary: Get Files from AWS S3
       requestBody:
         required: true
         content:
@@ -125,7 +85,7 @@ paths:
                 - region
       responses:
         '200':
-          description: Successful response
+          description: Successfully fetched files
           content:
             application/json:
               schema:
@@ -136,13 +96,13 @@ paths:
         '400':
           description: Missing AWS credentials
         '403':
-          description: Invalid or incomplete AWS credentials
+          description: Invalid AWS credentials
         '500':
           description: Server error
 
   /connect_postgres:
     post:
-      summary: Connect to PostgreSQL and download tables as CSV
+      summary: Connect to PostgreSQL and Fetch Data
       requestBody:
         required: true
         content:
@@ -168,7 +128,7 @@ paths:
                 - db_password
       responses:
         '200':
-          description: Successful response
+          description: Successfully connected and fetched data
           content:
             application/json:
               schema:
@@ -187,12 +147,26 @@ paths:
 
   /download_csv:
     get:
-      summary: Download output CSV file
+      summary: Download CSV File
       responses:
         '200':
-          description: Successful response
+          description: CSV file download
           content:
             text/csv:
               schema:
                 type: string
                 format: binary
+
+  /get_results:
+    get:
+      summary: Get Analysis Results
+      responses:
+        '200':
+          description: JSON containing analysis results
+          content:
+            application/json:
+              schema:
+                type: object
+
+components:
+  schemas: {}

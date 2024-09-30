@@ -172,7 +172,9 @@
 
     <script>
       const API_ENDPOINT = "/get_analysis";
-
+      let charts = {}; // Object to store chart instances for each canvas
+    
+      // Function to fetch data from the backend API
       async function fetchData() {
         try {
           console.log("Fetching data from:", API_ENDPOINT);
@@ -183,13 +185,15 @@
           }
           const data = await response.json();
           console.log("Received data:", data);
+          updateDashboard(data);
           return data;
         } catch (error) {
           console.error("Error fetching data:", error);
           throw error;
         }
       }
-
+    
+      // Function to display error messages
       function displayError(message, details = "") {
         document.getElementById("loadingMessage").style.display = "none";
         document.getElementById("errorMessage").textContent = message;
@@ -199,7 +203,8 @@
           document.getElementById("errorDetails").style.display = "block";
         }
       }
-
+    
+      // Update text content of an element
       function updateElementText(id, text) {
         const element = document.getElementById(id);
         if (element) {
@@ -209,61 +214,42 @@
           throw new Error(`Element with id "${id}" not found`);
         }
       }
-
+    
+      // Update the dashboard with new data
       function updateDashboard(data) {
         try {
           console.log("Updating dashboard with data:", data);
-
+    
           updateElementText("totalRisks", data["total_risks"]);
           updateElementText("meanRiskScore", data["mean_risk_score"]);
-
-          createPieChart(
-            "bucketDistributionChart",
-            data["bucket distribution"],
-            "Bucket Distribution"
-          );
-          createPieChart(
-            "riskDistributionChart",
-            data.risk_distribution,
-            "Risk Distribution"
-          );
-          createBarChart(
-            "piiCountsPerFileTypeChart",
-            data.pii_counts_per_file_type,
-            "PII Counts per File Type"
-          );
-          createBarChart(
-            "meanRiskPerFileTypeChart",
-            data.mean_risk_per_file_type,
-            "Mean Risk per File Type"
-          );
-          createBarChart(
-            "piiCountsPerFileChart",
-            data.pii_counts_per_file,
-            "PII Counts per File"
-          );
-          createLineChart(
-            "riskPerFileChart",
-            data.mean_risk_per_file,
-            "Mean Risk per File"
-          );
-          createBarChart(
-            "topCategories",
-            data.top_categories,
-            "Top PII Categories"
-          );
-
+    
+          // Create charts with the new data
+          createPieChart("bucketDistributionChart", data["bucket distribution"], "Bucket Distribution");
+          createPieChart("riskDistributionChart", data.risk_distribution, "Risk Distribution");
+          createBarChart("piiCountsPerFileTypeChart", data.pii_counts_per_file_type, "PII Counts per File Type");
+          createBarChart("meanRiskPerFileTypeChart", data.mean_risk_per_file_type, "Mean Risk per File Type");
+          createBarChart("piiCountsPerFileChart", data.pii_counts_per_file, "PII Counts per File");
+          createLineChart("riskPerFileChart", data.mean_risk_per_file, "Mean Risk per File");
+          createBarChart("topCategories", data.top_categories, "Top PII Categories");
+    
+          // Hide loading message and show dashboard
           document.getElementById("loadingMessage").style.display = "none";
           document.querySelector(".dashboard").style.display = "grid";
         } catch (error) {
           console.error("Error updating dashboard:", error);
-          displayError(
-            "Error updating dashboard. Please check console for details.",
-            error.toString()
-          );
+          displayError("Error updating dashboard. Please check console for details.", error.toString());
         }
       }
-
+    
+      // Function to destroy any existing chart before creating a new one
+      function destroyChart(chartId) {
+        if (charts[chartId]) {
+          charts[chartId].destroy();
+          charts[chartId] = null;
+        }
+      }
+    
+      // Function to create a pie chart
       function createPieChart(elementId, data, title) {
         const canvas = document.getElementById(elementId);
         if (!canvas) {
@@ -271,29 +257,17 @@
           return;
         }
         console.log(`Creating pie chart: ${title}`, data);
-        new Chart(canvas.getContext("2d"), {
+        destroyChart(elementId); // Destroy existing chart before creating a new one
+    
+        charts[elementId] = new Chart(canvas.getContext("2d"), {
           type: "pie",
           data: {
             labels: Object.keys(data),
             datasets: [
               {
                 data: Object.values(data),
-                backgroundColor: [
-                  "#FF6384",
-                  "#36A2EB",
-                  "#FFCE56",
-                  "#4BC0C0",
-                  "#9966FF",
-                  "#FF9F40",
-                ],
-                hoverBackgroundColor: [
-                  "#FF6384",
-                  "#36A2EB",
-                  "#FFCE56",
-                  "#4BC0C0",
-                  "#9966FF",
-                  "#FF9F40",
-                ],
+                backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF", "#FF9F40"],
+                hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF", "#FF9F40"],
               },
             ],
           },
@@ -301,19 +275,14 @@
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-              legend: {
-                display: true,
-                position: "bottom",
-              },
-              title: {
-                display: true,
-                text: title,
-              },
+              legend: { display: true, position: "bottom" },
+              title: { display: true, text: title },
             },
           },
         });
       }
-
+    
+      // Function to create a bar chart
       function createBarChart(elementId, data, title) {
         const canvas = document.getElementById(elementId);
         if (!canvas) {
@@ -321,7 +290,9 @@
           return;
         }
         console.log(`Creating bar chart: ${title}`, data);
-        new Chart(canvas.getContext("2d"), {
+        destroyChart(elementId); // Destroy existing chart before creating a new one
+    
+        charts[elementId] = new Chart(canvas.getContext("2d"), {
           type: "bar",
           data: {
             labels: Object.keys(data),
@@ -338,23 +309,15 @@
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-              legend: {
-                display: false,
-              },
-              title: {
-                display: true,
-                text: title,
-              },
+              legend: { display: false },
+              title: { display: true, text: title },
             },
-            scales: {
-              y: {
-                beginAtZero: true,
-              },
-            },
+            scales: { y: { beginAtZero: true } },
           },
         });
       }
-
+    
+      // Function to create a line chart
       function createLineChart(elementId, data, title) {
         const canvas = document.getElementById(elementId);
         if (!canvas) {
@@ -362,7 +325,9 @@
           return;
         }
         console.log(`Creating line chart: ${title}`, data);
-        new Chart(canvas.getContext("2d"), {
+        destroyChart(elementId); // Destroy existing chart before creating a new one
+    
+        charts[elementId] = new Chart(canvas.getContext("2d"), {
           type: "line",
           data: {
             labels: Object.keys(data),
@@ -380,39 +345,30 @@
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-              legend: {
-                display: false,
-              },
-              title: {
-                display: true,
-                text: title,
-              },
+              legend: { display: false },
+              title: { display: true, text: title },
             },
-            scales: {
-              y: {
-                beginAtZero: true,
-              },
-            },
+            scales: { y: { beginAtZero: true } },
           },
         });
       }
-
+    
+      // Initialize the dashboard by fetching data and setting up periodic updates
       async function initializeDashboard() {
         try {
           const data = await fetchData();
-          updateDashboard(data);
+          setInterval(fetchData, 120000); // Poll the backend every 2 minutes
         } catch (error) {
-          displayError(
-            "Failed to load data. Please try again later.",
-            error.toString()
-          );
+          displayError("Failed to load data. Please try again later.", error.toString());
         }
       }
-
+    
       document.addEventListener("DOMContentLoaded", initializeDashboard);
-      document.getElementById("view-btn").onclick = function() {
-            window.location.href = "/view";
-        };
+    
+      // Redirect to the view results page when the "View Results" button is clicked
+      document.getElementById("view-btn").onclick = function () {
+        window.location.href = "/view";
+      };
     </script>
   </body>
 </html>
