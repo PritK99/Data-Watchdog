@@ -1,5 +1,7 @@
 # Data Watchdog
 
+<img src="assets/img/logo.png" alt="logo page">
+
 ## Table of Contents
 
 - [Project](#data-watchdog)
@@ -22,13 +24,13 @@ Data Watchdog is a tool built to find and classify Personally Identifiable Infor
 
 **Features**: 
 
-1. Data Ingestion: Handles data from multiple file types like text files, log files, images, CSVs, PDFs etc
+1. Data Ingestion and Continuous Integration: Efficiently handles data from multiple sources, including Amazon AWS Cloud and SQL databases, as well as various file formats such as text files, log files, images, CSVs, and PDFs. Once configured, it continuously integrates and updates data fetched from the cloud.
 
-2. PII Detection: Detects personal data using machine learning and other techniques.
+2. PII Detection: Utilizes machine learning and advanced techniques to identify personal identifiable information (PII). Provides a comprehensive list of detected PII across various file types.
 
-3. Risk Assessment: Calculates a risk score based on the type of detected PII.
+3. Drilldown: Calculates a risk score based on the type of detected PII. Classifies data into categories and buckets, allowing users to view information at different levels of granularity.
 
-4. Data Visualization: Shows the analytics associated with detect PII.
+4. Data Visualization: Offers analytics related to detected PII, including metrics such as mean risk per file, mean risk per file type, total PII counts per file, and identification of the riskiest PII elements.
 
 ## Demo
 
@@ -36,7 +38,7 @@ https://github.com/user-attachments/assets/597ad48b-8e24-47e1-8d08-26b8420f3aae
 
 ## Methodology
 
-We primarily deal with 6 types of files, which are Text Files (`.txt`, `.log`), Image Files (`.png`, `.jpg`, `.jpeg`), PDF Files (`.pdf`), CSV Files (`.csv`), Audio Files (`.mp3`) and Video Files(`.mp4`). Details about each PII extraction process can be found <a href="model/README.md">here</a>
+We primarily deal with 6 types of files, which are Text Files (`.txt`, `.log`, `.docx`), Image Files (`.png`, `.jpg`, `.jpeg`), PDF Files (`.pdf`), CSV Files (`.csv`), Audio Files (`.mp3`) and Video Files(`.mp4`). Details about each PII extraction process can be found <a href="model/README.md">here</a>
 
 ### High Level Design
 
@@ -67,15 +69,18 @@ API Contract for the project can be found <a href="api_contract.yaml">here</a>
 ```
 👨‍💻Data Watchdog
  ┣ 📂assets
+ ┃ ┣ 📂demo
  ┃ ┣ 📂img          
  ┃ ┣ 📂temp                            // Sample files for testing
  ┃ ┣ 📂results                         // Output
+ ┃ ┣ 📄problem-statement.pdf
  ┣ 📂client                            // Frontend        
  ┃ ┣ 📂static    
  ┃ ┣ 📂templates    
  ┃ ┃ ┣ 📄home.html
  ┃ ┃ ┣ 📄configure.html
- ┃ ┃ ┣ 📄dashboard.html                            
+ ┃ ┃ ┣ 📄dashboard.html 
+ ┃ ┃ ┣ 📄view.html                           
  ┣ 📂model                                      
  ┃ ┣ 📄detect.py                       // Core functionality
  ┃ ┣ 📄utils.py 
@@ -87,7 +92,10 @@ API Contract for the project can be found <a href="api_contract.yaml">here</a>
  ┣ 📂server                            // Backend 
  ┃ ┣ 📂archive  
  ┃ ┣ 📄app.py  
- ┃ ┣ 📄requirements.txt      
+ ┃ ┣ 📄requirements.txt 
+ ┣ 📄api_contract.yaml
+ ┣ 📄data-watchdog-ppt.pptx  
+ ┣ 📄Configure.md   
  ┣ 📄README.md
 ``` 
 
@@ -172,6 +180,10 @@ Running the server will load the frontend at `http://localhost:5000/`
 ### Analytics and Dashboard
 
 <img src="assets/img/dashboard.png" alt="dashboard page">
+
+### Drilldown Page
+
+<img src="assets/img/drilldown.png" alt="drilldown page">
 
 ### Output File
 
